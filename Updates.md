@@ -2,6 +2,17 @@
 
 ## 2024-12-04
 
+### 19:15 - Updated Landing Page Color Scheme
+
+- Updated the landing page to use the same orange/red gradient color scheme as the user dashboard and admin pages
+- Applied the orange/red gradient to all buttons, background elements, and accent colors
+- Changed the main background to use a subtle orange/red gradient
+- Updated the CTA section to use the orange/red gradient instead of primary blue
+- Changed feature icons to use the orange/red colors
+- Updated the footer to use a dark gray background consistent with other pages
+- Fixed logo and branding elements to use the orange/red gradient
+- Ensured consistent visual identity across landing page, admin, and dashboard
+
 ### 18:30 - Restored Orange Color Scheme and Fixed UI Issues
 
 - Restored the original orange/red gradient color scheme throughout the application
