@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
+import { Logo } from "@/components/logo"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false)
@@ -36,7 +37,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (isLoading || !isAuthenticated || user?.role !== "admin") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
       </div>
     )
   }
@@ -90,10 +91,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       >
         <div className="p-4 border-b border-sidebar-border flex justify-between items-center">
           <div className={cn("flex items-center", collapsed ? "justify-center w-full" : "")}>
-            <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">A</span>
-            </div>
-            {!collapsed && <span className="ml-2 font-bold text-xl">AmperAI</span>}
+            {!collapsed ? (
+              <Logo withText size="md" className="text-sidebar-foreground" />
+            ) : (
+              <div className="w-8 h-8 rounded-md bg-sidebar-foreground flex items-center justify-center">
+                <span className="text-sidebar font-bold text-lg">A</span>
+              </div>
+            )}
           </div>
           <Button
             variant="ghost"

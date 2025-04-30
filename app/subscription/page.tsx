@@ -447,7 +447,7 @@ export default function SubscriptionPage() {
 
         {/* Change Plan Dialog */}
         <Dialog open={showChangePlanDialog} onOpenChange={setShowChangePlanDialog}>
-          <DialogContent className="sm:max-w-4xl">
+          <DialogContent className="sm:max-w-4xl max-h-screen overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Choose a Subscription Plan</DialogTitle>
               <DialogDescription>Select a plan that best fits your needs.</DialogDescription>
@@ -626,7 +626,7 @@ export default function SubscriptionPage() {
 
         {/* Confirm Purchase Dialog */}
         <Dialog open={showConfirmPurchaseDialog} onOpenChange={setShowConfirmPurchaseDialog}>
-          <DialogContent className="max-h-screen overflow-y-auto">
+          <DialogContent className="max-h-screen max-w-4xl overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Confirm Subscription</DialogTitle>
               <DialogDescription>Review your subscription details before confirming.</DialogDescription>

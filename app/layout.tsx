@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { Toaster } from "@/components/ui/toaster"
 import { SessionProvider } from "next-auth/react"
+import Head from "next/head"
 
 const figtree = Figtree({ subsets: ["latin"] })
 
@@ -21,6 +22,9 @@ const figtree = Figtree({ subsets: ["latin"] })
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <title>Amperly AI | Automate customer interactions with AI</title>
+      </head>
       <body className={figtree.className}>
         {/* SessionProvider is maintained for backward compatibility */}
         <SessionProvider>

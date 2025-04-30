@@ -387,30 +387,31 @@ export default function UsersPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => router.push(`/admin/users/${user.id}`)}>
+                        <DropdownMenuSeparator />
+                          {/* <DropdownMenuItem onClick={() => router.push(`/admin/users/${user.id}`)}>
                             <Edit className="mr-2 h-4 w-4" />
                             Edit User
-                          </DropdownMenuItem>
+                          </DropdownMenuItem> */}
                           <DropdownMenuItem onClick={() => router.push(`/admin/users/${user.id}/tokens`)}>
                             <Zap className="mr-2 h-4 w-4" />
                             Manage Tokens
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          {/* <DropdownMenuItem>
                             <Shield className="mr-2 h-4 w-4" />
                             Change Permissions
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => {
+                          </DropdownMenuItem> */}
+                          {/* <DropdownMenuItem onClick={() => {
                             setSelectedUser(user);
                             setIsAddingTokens(true);
                           }}>
                             <Coins className="mr-2 h-4 w-4" />
                             Add Tokens
-                          </DropdownMenuItem>
+                          </DropdownMenuItem> */}
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-red-600">
+                          {/* <DropdownMenuItem className="text-red-600">
                             <Trash className="mr-2 h-4 w-4" />
                             Delete User
-                          </DropdownMenuItem>
+                          </DropdownMenuItem> */}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </td>

@@ -277,6 +277,15 @@ export default function DashboardPage() {
               {tokensRemaining} tokens remaining
             </p>
           </div>
+          
+          <div className="mt-6 flex justify-end">
+            <Button 
+              onClick={() => router.push("/subscription")}
+              className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+            >
+              Manage Subscription
+            </Button>
+          </div>
         </CardContent>
       </Card>
     );
@@ -292,13 +301,12 @@ export default function DashboardPage() {
             <p className="text-gray-600 mt-1">Here's what's happening with your account today.</p>
           </div>
           <div className="flex gap-3">
-            <Button 
-              variant="outline" 
-              className="bg-white border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-              onClick={() => router.push("/account")}
+            <Button
+              onClick={() => router.push("/subscription")}
+              className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white gap-2"
             >
-              <User className="h-4 w-4 mr-2" />
-              Account
+              <Zap className="h-4 w-4" />
+              <span>Manage Subscription</span>
             </Button>
             <UserDropdown userName={userName}>
               <Button variant="outline" className="gap-2">

@@ -14,7 +14,7 @@ export default function LandingPage() {
             <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
               <span className="text-white font-bold text-lg">A</span>
             </div>
-            <h1 className="text-xl font-bold text-foreground">AmperAI</h1>
+            <h1 className="text-xl font-bold text-foreground">Amperly AI</h1>
           </div>
           <nav className="hidden md:flex items-center space-x-8">
             <Link href="#features" className="text-foreground/80 hover:text-foreground transition-colors">
@@ -139,7 +139,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to transform your customer experience?</h2>
           <p className="text-white/80 max-w-2xl mx-auto mb-8">
-            Join thousands of businesses already using AmperAI to automate their customer interactions and grow their revenue.
+            Join thousands of businesses already using Amperly AI to automate their customer interactions and grow their revenue.
           </p>
           <Button className="bg-white text-primary hover:bg-white/90 text-lg py-6 px-8">
             Start Your Free Trial
@@ -156,7 +156,7 @@ export default function LandingPage() {
                 <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
                   <span className="text-white font-bold text-lg">A</span>
                 </div>
-                <h1 className="text-xl font-bold">AmperAI</h1>
+                <h1 className="text-xl font-bold">Amperly AI</h1>
               </div>
               <p className="text-white/70 max-w-xs">
                 Automating customer interactions with powerful AI to help businesses grow.
@@ -201,15 +201,8 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-          <div className="border-t border-white/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-white/60 text-sm">© 2024 AmperAI. All rights reserved.</p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              {["Twitter", "LinkedIn", "Facebook", "Instagram"].map((social) => (
-                <Link key={social} href="#" className="text-white/60 hover:text-white transition-colors">
-                  {social}
-                </Link>
-              ))}
-            </div>
+          <div className="mt-8 pt-8 border-t border-white/10 text-center text-white/60 text-sm">
+            &copy; {new Date().getFullYear()} Amperly AI. All rights reserved.
           </div>
         </div>
       </footer>

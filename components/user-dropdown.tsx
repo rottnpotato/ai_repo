@@ -49,18 +49,18 @@ export const UserDropdown: FC<UserDropdownProps> = ({ children, userName }) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push("/profile")}>
+          {/* <DropdownMenuItem onClick={() => router.push("/profile")}>
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem onClick={() => router.push("/subscription")}>
             <CreditCard className="mr-2 h-4 w-4" />
             <span>Subscription</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/settings")}>
+          {/* <DropdownMenuItem onClick={() => router.push("/settings")}>
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={HandleLogout}>
