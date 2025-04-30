@@ -39,7 +39,6 @@ export function UseApi<T, A extends any[]>(
       const apiError = err instanceof ApiError
         ? err
         : new ApiError(500, err instanceof Error ? err.message : 'Unknown error');
-      
       setError(apiError);
       onError?.(apiError);
       return null;
