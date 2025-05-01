@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { 
@@ -19,8 +19,39 @@ import { UseSubscription } from "@/hooks/useSubscription"
 import { SubscriptionService } from "@/lib/services/SubscriptionService"
 import Image from "next/image"
 
+// SearchParams provider component that wraps useSearchParams hook
+function SearchParamsProvider({ children }: { children: (searchParams: URLSearchParams) => React.ReactNode }) {
+  const searchParams = useSearchParams();
+  return <>{children(searchParams)}</>;
+}
+
+// Loading fallback for Suspense
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-orange-50 to-red-50 p-8">
+      <Logo className="mb-8" />
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mx-auto mb-4"></div>
+        <h3 className="text-xl font-medium text-gray-800">Loading page parameters...</h3>
+        <p className="text-gray-600 mt-2">Just a moment while we prepare your data</p>
+      </div>
+    </div>
+  );
+}
+
+// Main subscription page wrapped with Suspense boundary for searchParams
 export default function WordPressSubscriptionPage() {
-  const searchParams = useSearchParams()
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <SearchParamsProvider>
+        {(searchParams) => <WordPressSubscriptionContent searchParams={searchParams} />}
+      </SearchParamsProvider>
+    </Suspense>
+  );
+}
+
+// Main content component that receives searchParams as prop
+function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearchParams }) {
   const router = useRouter()
   const { 
     subscription, 

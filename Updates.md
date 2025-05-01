@@ -1,5 +1,20 @@
 # Updates Log
 
+## 2024-04-16
+
+### 14:15 - Wrapped useSearchParams in Suspense Boundary in WordPress Subscription Page
+
+- Refactored WordPress subscription page to wrap the `useSearchParams()` hook in a Suspense boundary for better performance
+- Split the component into two parts: a wrapper component and a content component
+- Created a new `SearchParamsProvider` component to safely use the `useSearchParams()` hook
+- Added a proper loading fallback UI for the Suspense boundary
+- Improved the component architecture by passing search params as props instead of using hooks directly
+- Enhanced user experience by showing a dedicated loading state while params are being loaded
+- Implemented best practices for Next.js by properly isolating client-side hooks in dedicated components
+- This change prevents hydration issues that can occur with `useSearchParams()` 
+- Maintained all existing functionality while improving component structure
+- Ensures the page works correctly with React's concurrent features
+
 ## 2024-12-29
 
 ### 19:15 - Fixed WordPressAuthContext Response Format and Error Handling
