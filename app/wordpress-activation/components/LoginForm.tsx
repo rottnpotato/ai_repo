@@ -18,7 +18,7 @@ interface LoginFormProps {
 }
 
 // Hardcoded client ID as fallback (same as in .env.local)
-const GOOGLE_CLIENT_ID = "953309403031-68ev06n48b53l7nj60m36q419cnjrbj4.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = "asd";
 
 // Helper function to safely get the Google client ID
 const getGoogleClientId = () => {
@@ -52,6 +52,8 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
   // When component mounts or remounts
   useEffect(() => {
     console.log("[WP-GoogleAuth] Login form mounted/remounted");
+    console.log("[WP-GoogleAuth] Activation parameters:", { activationToken, redirectBack });
+    
     mountedRef.current = true;
     setMountId(Date.now()); // Generate new mount ID
     setGoogleButtonRendered(false); // Reset button state
@@ -73,7 +75,7 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
       mountedRef.current = false;
       console.log("[WP-GoogleAuth] Login form unmounted");
     };
-  }, []); 
+  }, [activationToken, redirectBack]);
 
   // Handle Google Script Load
   const handleGoogleScriptLoad = () => {
@@ -174,7 +176,23 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
     if (!mountedRef.current) return;
     
     try {
-      console.log("WordPress Google credential response received:", response);
+      console.log("[WP-GoogleAuth] Credential response received:", response);
+      
+      // Log the WordPress activation parameters for debugging
+      console.log("[WP-GoogleAuth] WordPress activation parameters:", {
+        activationToken,
+        redirectBack
+      });
+      
+      // Validate activation parameters
+      if (!activationToken) {
+        console.warn("[WP-GoogleAuth] Missing activation token for WordPress integration");
+      }
+      
+      // Validate the response object
+      if (!response) {
+        throw new Error("Empty response received from Google authentication");
+      }
       
       // Get the Google ID token from response
       const googleToken = response.credential;
@@ -183,28 +201,40 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
         throw new Error("No Google token received");
       }
       
-      console.log("Sending Google token to backend...");
+      console.log("[WP-GoogleAuth] Sending Google token to backend...");
       
       // Use the WordPress specific Google login function
       const result = await GoogleLoginForWordPress(googleToken);
       
-      if (result && result.user && result.accessToken) {
+      // Validate result structure
+      if (!result) {
+        throw new Error("Empty result from Google authentication");
+      }
+      
+      if (result.user && result.accessToken) {
         toast({
           title: "Google Login Successful",
           description: "You've been authenticated with Google.",
         });
         
-        // Redirect to subscription page with the tokens
+        // Before redirecting, verify we have the WordPress activation parameters
+        console.log("[WP-GoogleAuth] Pre-redirect WordPress parameters check:", {
+          activationToken,
+          redirectBack
+        });
+        
+        // Redirect to subscription page with the WordPress activation tokens
         redirectToSubscription(result.accessToken);
       } else {
+        console.error("[WP-GoogleAuth] Incomplete authentication result:", result);
         toast({
           title: "Google Login Failed",
-          description: "Unable to authenticate with Google.",
+          description: "Unable to authenticate with Google. Please try again.",
           variant: "destructive",
         });
       }
     } catch (err) {
-      console.error("WordPress Google login error:", err);
+      console.error("[WP-GoogleAuth] Login error:", err);
       toast({
         title: "Google Login Error",
         description: err instanceof Error ? err.message : "An unexpected error occurred",
@@ -243,7 +273,7 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
       } else {
         toast({
           title: "Login Failed",
-          description: error || "Invalid login credentials",
+          description: error || "An error has occurred, please try again.",
           variant: "destructive"
         });
       }
@@ -257,7 +287,18 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
     }
   }
 
-  const redirectToSubscription = (accessToken: string) => {
+  const redirectToSubscription = (accessToken: string | undefined) => {
+    // Validate that accessToken exists
+    if (!accessToken) {
+      console.error("[WP-Auth] Missing access token for redirect");
+      toast({
+        title: "Authentication Error",
+        description: "Missing authentication token. Please try again.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     // Use empty strings as fallbacks if activationToken or redirectBack are null
     const token = activationToken || '';
     const redirect = redirectBack || '';

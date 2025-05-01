@@ -18,13 +18,25 @@ export function UseSubscription() {
   const [purchaseError, setPurchaseError] = useState<ApiError | null>(null);
 
   const FetchSubscription = useCallback(async () => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated) return null;
     
     setIsLoading(true);
     setError(null);
     
     try {
       const data = await SubscriptionService.GetCurrentSubscription();
+      
+      // Add a safety check to ensure data is valid
+      if (!data) {
+        console.warn('[UseSubscription] Received empty data from GetCurrentSubscription');
+        setSubscription(null);
+        return null;
+      }
+      
+      // Log the data for debugging
+      console.log('[UseSubscription] Subscription data received:', data);
+      
+      // Set the subscription state with the validated data
       setSubscription(data);
       return data;
     } catch (err) {
@@ -33,7 +45,8 @@ export function UseSubscription() {
         : new ApiError(500, err instanceof Error ? err.message : 'Unknown error');
       
       setError(apiError);
-      console.error('Error fetching subscription:', apiError);
+      console.error('[UseSubscription] Error fetching subscription:', apiError);
+      setSubscription(null);
       return null;
     } finally {
       setIsLoading(false);
@@ -46,6 +59,15 @@ export function UseSubscription() {
     
     try {
       const plans = await SubscriptionService.GetAvailablePlans();
+      
+      // Add safety check for plans data
+      if (!plans || !Array.isArray(plans)) {
+        console.warn('[UseSubscription] Received invalid plans data:', plans);
+        setAvailablePlans([]);
+        return [];
+      }
+      
+      console.log('[UseSubscription] Available plans received:', plans.length);
       setAvailablePlans(plans);
       return plans;
     } catch (err) {
@@ -54,7 +76,8 @@ export function UseSubscription() {
         : new ApiError(500, err instanceof Error ? err.message : 'Unknown error');
       
       setPlansError(apiError);
-      console.error('Error fetching available plans:', apiError);
+      console.error('[UseSubscription] Error fetching available plans:', apiError);
+      setAvailablePlans([]);
       return [];
     } finally {
       setIsLoadingPlans(false);
@@ -68,7 +91,18 @@ export function UseSubscription() {
     setError(null);
     
     try {
+      // Ensure subscription ID is valid
+      if (!subscription.Id) {
+        throw new Error('Missing subscription ID');
+      }
+      
       const updatedSubscription = await SubscriptionService.UpdateAutoRenew(subscription.Id, autoRenew);
+      
+      // Safety check for returned data
+      if (!updatedSubscription) {
+        throw new Error('Empty response when updating auto renew');
+      }
+      
       setSubscription(updatedSubscription);
       return updatedSubscription;
     } catch (err) {
@@ -77,6 +111,7 @@ export function UseSubscription() {
         : new ApiError(500, err instanceof Error ? err.message : 'Unknown error');
       
       setError(apiError);
+      console.error('[UseSubscription] Error updating auto renew:', apiError);
       return null;
     } finally {
       setIsLoading(false);
@@ -90,7 +125,18 @@ export function UseSubscription() {
     setPurchaseError(null);
     
     try {
+      // Validate request data
+      if (!request || typeof request.SubscriptionPlanId !== 'number') {
+        throw new Error('Invalid subscription purchase request');
+      }
+      
       const newSubscription = await SubscriptionService.PurchaseSubscription(request);
+      
+      // Safety check for returned data
+      if (!newSubscription) {
+        throw new Error('Empty response when purchasing subscription');
+      }
+      
       setSubscription(newSubscription);
       return newSubscription;
     } catch (err) {
@@ -99,7 +145,7 @@ export function UseSubscription() {
         : new ApiError(500, err instanceof Error ? err.message : 'Unknown error');
       
       setPurchaseError(apiError);
-      console.error('Error purchasing subscription:', apiError);
+      console.error('[UseSubscription] Error purchasing subscription:', apiError);
       return null;
     } finally {
       setIsPurchasing(false);
@@ -109,20 +155,26 @@ export function UseSubscription() {
   // Fetch subscription data on mount or when auth state changes
   useEffect(() => {
     if (isAuthenticated) {
+      console.log('[UseSubscription] Auth state changed, fetching subscription');
       FetchSubscription();
+    } else {
+      console.log('[UseSubscription] Not authenticated, skipping subscription fetch');
+      // Clear subscription when not authenticated
+      setSubscription(null);
     }
   }, [isAuthenticated, FetchSubscription]);
 
   // Fetch available plans on mount, but only if we don't have an active subscription
   useEffect(() => {
-    // If we already have a subscription and it's active, we may not need plans
-    // This is a default behavior that components can override by explicitly calling FetchAvailablePlans
-    const hasActiveSubscription = subscription && subscription.Status === "Active";
+    // Check both uppercase and lowercase status values to be safe
+    const hasActiveSubscription = subscription && 
+      (subscription.Status === "Active" || subscription.Status === "active");
     
     if (!hasActiveSubscription) {
+      console.log('[UseSubscription] No active subscription, fetching available plans');
       FetchAvailablePlans();
     } else {
-      console.log("Active subscription detected, skipping automatic plan fetching");
+      console.log('[UseSubscription] Active subscription detected, skipping automatic plan fetching');
     }
   }, [subscription, FetchAvailablePlans]);
 

@@ -35,100 +35,115 @@ export default function WordPressSubscriptionPage() {
   } = UseSubscription()
   const { toast } = useToast()
   
-  const [activationToken, setActivationToken] = useState<string | null>(null)
-  const [redirectBack, setRedirectBack] = useState<string | null>(null)
-  const [accessToken, setAccessToken] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [isRedirecting, setIsRedirecting] = useState(false)
-  const [integrationComplete, setIntegrationComplete] = useState(false)
-  const [imageLoaded, setImageLoaded] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState<number | null>(null)
+  // Combine related state variables into a single object to prevent multiple re-renders
+  const [integrationParams, setIntegrationParams] = useState({
+    activationToken: null as string | null,
+    redirectBack: null as string | null,
+    accessToken: null as string | null
+  })
   
-  // Load parameters from query string
+  const [uiState, setUiState] = useState({
+    error: null as string | null,
+    isRedirecting: false,
+    integrationComplete: false,
+    imageLoaded: false,
+    selectedPlan: null as number | null
+  })
+  
+  // Consolidated useEffect for URL parameters, subscription fetching, and plans fetching
   useEffect(() => {
-    const token = searchParams.get("activation_token")
-    const redirect = searchParams.get("redirect_back")
-    const access = searchParams.get("access_token")
-    
-    console.log("[WP-Integration] Processing URL parameters", { token, redirect, access })
-    
-    // If we're coming from a login (no WordPress parameters in URL but we have a session)
-    // We shouldn't show any errors - this is a normal login flow
-    if (!token && !redirect && !access) {
-      console.log("[WP-Integration] Normal login flow detected (no WordPress parameters)")
-      // For normal login flow without WordPress parameters, don't show any errors
-      // Just load subscription data
-      FetchSubscription()
-      // Don't fetch plans yet - we'll do this in the dedicated subscription check effect
-      return
-    }
-    
-    // If we have some but not all parameters, that's when we should show an error
-    if ((!token || !redirect || !access) && (token || redirect || access)) {
-      console.log("[WP-Integration] Partial WordPress parameters detected, showing error")
-      setActivationToken(token)
-      setRedirectBack(redirect)
-      setAccessToken(access)
-      setError("Some WordPress integration parameters are missing. Please ensure you have all required parameters in the URL.")
+    const initializeIntegration = async () => {
+      // Extract parameters only once
+      const token = searchParams.get("activation_token")
+      const redirect = searchParams.get("redirect_back")
+      const access = searchParams.get("access_token")
       
-      // Still fetch subscription data even if WordPress parameters are missing
-      FetchSubscription()
-      // Don't fetch plans yet - we'll do this in the dedicated subscription check effect
-      return
+      console.log("[WP-Integration] Processing URL parameters", { token, redirect, access })
+      
+      // Set all state variables in a single update operation
+      setIntegrationParams({
+        activationToken: token,
+        redirectBack: redirect,
+        accessToken: access
+      })
+      
+      try {
+        // Handle error states - only set error if needed
+        if ((!token && !redirect && !access) || (token && redirect && access)) {
+          // Valid cases: either all parameters present, or none (normal login)
+          console.log(token ? "[WP-Integration] WordPress params detected" : "[WP-Integration] Normal login flow detected")
+        } else {
+          // Invalid case: only some parameters present
+          console.log("[WP-Integration] Partial WordPress parameters detected, showing error")
+          setUiState(prev => ({
+            ...prev,
+            error: "Some WordPress integration parameters are missing. Please ensure you have all required parameters in the URL."
+          }))
+        }
+        
+        // Combined fetch operation to prevent multiple renders
+        // Always check for subscription first
+        console.log("[WP-Integration] Checking for existing subscription")
+        const subscriptionData = await FetchSubscription()
+        console.log("[WP-Integration] Subscription data:", subscriptionData)
+        
+        // Only fetch plans if needed (no active subscription)
+        // Check both uppercase and lowercase status values to be safe
+        if (!subscriptionData || 
+            (subscriptionData.Status !== "Active" && subscriptionData.Status !== "active")) {
+          console.log("[WP-Integration] No active subscription found, fetching available plans")
+          await FetchAvailablePlans()
+        } else {
+          console.log("[WP-Integration] User has active subscription:", subscriptionData)
+        }
+      } catch (error) {
+        console.error("[WP-Integration] Error during initialization:", error)
+        // In case of error, make sure we have plans to display
+        await FetchAvailablePlans()
+      }
     }
     
-    // All parameters are present, proceed with WordPress integration
-    console.log("[WP-Integration] Complete WordPress parameters detected, proceeding with integration")
-    setActivationToken(token)
-    setRedirectBack(redirect)
-    setAccessToken(access)
-    
-    // Always fetch subscription data to check if user already has an active plan
-    FetchSubscription()
-    // Don't fetch plans yet - we'll do this in the dedicated subscription check effect
-  }, [searchParams, FetchSubscription])
+    // Run initialization only once
+    initializeIntegration()
+    // Only depend on searchParams so this runs when the URL changes
+    // FetchSubscription and FetchAvailablePlans are excluded to prevent unnecessary re-runs
+  }, [searchParams])
   
-  // Add a subscription check effect to ensure we query for subscription status immediately after login/signup
-  useEffect(() => {
-    console.log("[WP-Integration] Checking for existing subscription using /api/user-subscriptions/current")
-    
-    // First fetch the current subscription using the hook's FetchSubscription method
-    FetchSubscription().then(subscriptionData => {
-      if (subscriptionData && subscriptionData.Status === "active") {
-        console.log("[WP-Integration] User has active subscription, no need to show plans again:", subscriptionData)
-        // User already has an active subscription, no need to show plans
-        // We'll render the appropriate UI based on the subscription status
-      } else {
-        console.log(`[WP-Integration] No active subscription found (status: ${subscriptionData?.Status || 'undefined'}), fetching available plans`)
-        // Only fetch plans if we don't have an active subscription
-        FetchAvailablePlans()
-      }
-    }).catch(error => {
-      console.error("[WP-Integration] Error checking subscription:", error)
-      // Fetch plans as fallback if subscription check fails
-      FetchAvailablePlans()
-    })
-  }, [FetchSubscription, FetchAvailablePlans])
-
+  // Destructure state variables for convenience
+  const { activationToken, redirectBack, accessToken } = integrationParams
+  const { error, isRedirecting, integrationComplete, imageLoaded, selectedPlan } = uiState
+  
+  // Helper function to update UI state
+  const updateUiState = (updates: Partial<typeof uiState>) => {
+    setUiState(prev => ({ ...prev, ...updates }))
+  }
+  
   // Filter and sort available plans
-  const sortedPlans = [...(availablePlans || [])].filter(plan => plan.IsActive).sort((a, b) => {
+  const sortedPlans = [...(availablePlans || [])].filter(plan => plan && plan.IsActive).sort((a, b) => {
+    // Handle potentially undefined plans
+    if (!a || !b) return 0;
+    
     // Trial plans first
     if (a.PlanType === "Trial" && b.PlanType !== "Trial") return -1
     if (a.PlanType !== "Trial" && b.PlanType === "Trial") return 1
 
     // Then by price
-    return parseFloat(a.Price?.toString() || "0") - parseFloat(b.Price?.toString() || "0")
+    const aPrice = parseFloat(a.Price?.toString() || "0")
+    const bPrice = parseFloat(b.Price?.toString() || "0")
+    return aPrice - bPrice
   })
 
   // Handle opt-out (skip subscription)
   const handleOptOut = async () => {
     if (!activationToken || !redirectBack || !accessToken) {
-      setError("Missing required WordPress integration parameters. Please return to WordPress and try again.")
+      updateUiState({ 
+        error: "Missing required WordPress integration parameters. Please return to WordPress and try again." 
+      })
       return
     }
     
     try {
-      setIsRedirecting(true)
+      updateUiState({ isRedirecting: true })
       
       // Send POST request with activation token and access token
       const response = await fetch(redirectBack, {
@@ -153,13 +168,17 @@ export default function WordPressSubscriptionPage() {
       })
       
       // Update UI to show completion state
-      setIsRedirecting(false)
-      setIntegrationComplete(true)
+      updateUiState({ 
+        isRedirecting: false,
+        integrationComplete: true 
+      })
       
     } catch (err) {
       console.error("Opt-out error:", err)
-      setError(err instanceof Error ? err.message : "An unexpected error occurred")
-      setIsRedirecting(false)
+      updateUiState({ 
+        error: err instanceof Error ? err.message : "An unexpected error occurred",
+        isRedirecting: false
+      })
       
       toast({
         title: "Integration Error",
@@ -172,12 +191,14 @@ export default function WordPressSubscriptionPage() {
   // Handle WordPress integration
   const handleWordPressIntegration = async () => {
     if (!activationToken || !redirectBack || !accessToken) {
-      setError("Missing required WordPress integration parameters. Please return to WordPress and try again.")
+      updateUiState({ 
+        error: "Missing required WordPress integration parameters. Please return to WordPress and try again." 
+      })
       return
     }
     
     try {
-      setIsRedirecting(true)
+      updateUiState({ isRedirecting: true })
       
       // Send POST request with activation token and access token
       const response = await fetch(redirectBack, {
@@ -202,13 +223,17 @@ export default function WordPressSubscriptionPage() {
       })
       
       // Update UI to show completion state
-      setIsRedirecting(false)
-      setIntegrationComplete(true)
+      updateUiState({ 
+        isRedirecting: false,
+        integrationComplete: true 
+      })
       
     } catch (err) {
       console.error("Integration error:", err)
-      setError(err instanceof Error ? err.message : "An unexpected error occurred")
-      setIsRedirecting(false)
+      updateUiState({ 
+        error: err instanceof Error ? err.message : "An unexpected error occurred",
+        isRedirecting: false
+      })
       
       toast({
         title: "Integration Error",
@@ -221,7 +246,7 @@ export default function WordPressSubscriptionPage() {
   // Handle purchase subscription
   const handlePurchaseSubscription = async (planId: number) => {
     if (!activationToken || !redirectBack || !accessToken) {
-      setError("Missing required integration parameters")
+      updateUiState({ error: "Missing required integration parameters" })
       return
     }
     
@@ -234,18 +259,16 @@ export default function WordPressSubscriptionPage() {
       
       if (result) {
         // Set the selected plan
-        setSelectedPlan(planId)
+        updateUiState({ selectedPlan: planId })
         
         toast({
           title: "Subscription Successful",
           description: `You've successfully subscribed to the ${result.SubscriptionPlan?.Name} plan. Click "Complete Integration" to connect with WordPress.`,
         })
-        
-        // No automatic integration - wait for user to click the Complete Integration button
       }
     } catch (err) {
       console.error("Subscription error:", err)
-      setError(err instanceof Error ? err.message : "An unexpected error occurred")
+      updateUiState({ error: err instanceof Error ? err.message : "An unexpected error occurred" })
       
       toast({
         title: "Subscription Error",
@@ -257,7 +280,7 @@ export default function WordPressSubscriptionPage() {
   
   // Format currency helper
   const formatCurrency = (price: string | number | undefined, currency: string) => {
-    if (price === undefined) return "$0.00"
+    if (price === undefined || price === null) return "$0.00"
     
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -267,9 +290,11 @@ export default function WordPressSubscriptionPage() {
   
   // Set of placeholder features based on plan type
   const getPlaceholderFeatures = (planType: string, isFree: boolean, tokenLimit: number) => {
+    const safeTokenLimit = tokenLimit || 0;
+    
     if (planType === "Trial") {
       return [
-        `${tokenLimit} tokens per month`,
+        `${safeTokenLimit} tokens per month`,
         "Up to 10 product descriptions per month",
         "Basic SEO optimization",
         "Standard support response time",
@@ -279,7 +304,7 @@ export default function WordPressSubscriptionPage() {
     
     if (isFree) {
       return [
-       `${tokenLimit} tokens per month`,
+       `${safeTokenLimit} tokens per month`,
         "Up to 5 product descriptions per month",
         "Basic text editing tools",
         "Community support only",
@@ -289,12 +314,11 @@ export default function WordPressSubscriptionPage() {
     
     // For paid plans
     return [
-      `${tokenLimit} tokens per month`,
+      `${safeTokenLimit} tokens per month`,
       "Advanced SEO optimization tools",
       "Priority customer support",
       "Bulk content generation",
       "WordPress plugin integration",
-
     ]
   }
   
@@ -367,7 +391,7 @@ export default function WordPressSubscriptionPage() {
   const isNormalLogin = !activationToken && !redirectBack && !accessToken
   
   // Handle active subscription scenarios regardless of integration mode
-  if (subscription && subscription.Status === "Active") {
+  if (subscription && (subscription.Status === "Active" || subscription.Status === "active")) {
     // Case 1: Active subscription in WordPress integration mode - show integration UI
     if (isWordPressIntegration) {
       return (

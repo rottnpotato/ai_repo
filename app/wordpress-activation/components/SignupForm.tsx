@@ -17,8 +17,22 @@ interface SignupFormProps {
   redirectBack: string | null
 }
 
+// Define the new response format interface
+interface SignupSuccessResponse {
+  success: boolean
+  message: string
+}
+
+// Define a type that can be either the old or new response format
+type SignupResponse = SignupSuccessResponse | { user: any; accessToken: string }
+
+// Helper to check if response is the success format
+function isSuccessResponse(response: SignupResponse): response is SignupSuccessResponse {
+  return 'success' in response && typeof response.success === 'boolean';
+}
+
 // Hardcoded client ID as fallback (same as in .env.local)
-const GOOGLE_CLIENT_ID = "953309403031-68ev06n48b53l7nj60m36q419cnjrbj4.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = "asd";
 
 // Helper function to safely get the Google client ID
 const getGoogleClientId = () => {
@@ -46,12 +60,32 @@ export function SignupForm({ activationToken, redirectBack }: SignupFormProps) {
   const [googleButtonError, setGoogleButtonError] = useState(false)
   const [retryCount, setRetryCount] = useState(0)
   const [mountId, setMountId] = useState(Date.now())
+  const [localError, setLocalError] = useState<string | null>(null)
+  const [ignoreContextError, setIgnoreContextError] = useState(false)
   
   const { SignupForWordPress, GoogleSignupForWordPress, isLoading, error, ClearError } = UseWordPressAuth()
   const { toast } = useToast()
   const router = useRouter()
   const googleButtonRef = useRef<HTMLDivElement>(null);
   const mountedRef = useRef(false);
+
+  // Clear error when component mounts
+  useEffect(() => {
+    console.log("Clearing errors on component mount");
+    ClearError();
+    setLocalError(null);
+    setIgnoreContextError(false);
+  }, [ClearError]);
+
+  // Monitor context error changes and handle them
+  useEffect(() => {
+    console.log("Context error changed:", error);
+    // If we're ignoring context errors and there is an error, clear it
+    if (ignoreContextError && error) {
+      console.log("Ignoring and clearing context error");
+      ClearError();
+    }
+  }, [error, ignoreContextError, ClearError]);
 
   // When component mounts or remounts
   useEffect(() => {
@@ -220,8 +254,15 @@ export function SignupForm({ activationToken, redirectBack }: SignupFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
+    // Reset errors at the beginning of each submission and set flag to ignore context errors
+    console.log("Form submitted, clearing all errors");
+    ClearError();
+    setLocalError(null);
+    setIgnoreContextError(true); // Ignore any errors in the context going forward
+    
     // Validation
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      setLocalError("Please fill in all fields");
       toast({
         title: "Missing Information",
         description: "Please fill in all fields",
@@ -231,6 +272,7 @@ export function SignupForm({ activationToken, redirectBack }: SignupFormProps) {
     }
     
     if (password !== confirmPassword) {
+      setLocalError("Passwords do not match");
       toast({
         title: "Password Mismatch",
         description: "Passwords do not match",
@@ -240,6 +282,7 @@ export function SignupForm({ activationToken, redirectBack }: SignupFormProps) {
     }
     
     if (password.length < 8) {
+      setLocalError("Password must be at least 8 characters long");
       toast({
         title: "Password Too Short",
         description: "Password must be at least 8 characters long",
@@ -248,10 +291,19 @@ export function SignupForm({ activationToken, redirectBack }: SignupFormProps) {
       return
     }
     
-    ClearError();
-    
     try {
-      // Signup using WordPress auth context
+      // Temporarily clear the ignoreContextError flag during the API call
+      setIgnoreContextError(false);
+      
+      // Log submission attempt
+      console.log("Submitting signup form with data:", { 
+        FirstName: firstName,
+        LastName: lastName,
+        Email: email,
+        Password: "********", // Don't log actual password
+        ConfirmPassword: "********" // Don't log actual password
+      });
+      
       const result = await SignupForWordPress({
         FirstName: firstName,
         LastName: lastName,
@@ -260,7 +312,85 @@ export function SignupForm({ activationToken, redirectBack }: SignupFormProps) {
         ConfirmPassword: confirmPassword
       });
       
-      if (result && result.user && result.accessToken) {
+      // Set the ignore flag back to true after API call to prevent any lingering errors
+      setIgnoreContextError(true);
+      
+      // Detailed logging of response for debugging
+      console.log("Signup response:", result);
+      console.log("Response type:", typeof result);
+      console.log("Is null?", result === null);
+      console.log("Is object?", typeof result === 'object' && result !== null);
+      
+      // Handle null or undefined result
+      if (!result) {
+        console.log("Result is null or undefined but might still indicate success");
+        
+        // If there's no local error, assume success
+        if (!localError) {
+          toast({
+            title: "Signup Successful",
+            description: "Your account has been created successfully. Please check your email to verify your account.",
+          });
+          
+          // Redirect to login page with default message
+          router.replace(`/wordpress-activation?activation_token=${encodeURIComponent(activationToken || '')}&redirect_back=${encodeURIComponent(redirectBack || '')}`);
+          return;
+        } else {
+          // Get the latest error message from the context or use the local error
+          const currentError = error || localError;
+          toast({
+            title: "Signup Failed",
+            description: currentError || "Account creation failed. Please try again.",
+            variant: "destructive"
+          });
+          return;
+        }
+      }
+      
+      // Check if the result exists and has a valid structure
+      console.log("Response structure check:");
+      if (typeof result === 'object' && result !== null) {
+        console.log("  - Has 'success' property:", 'success' in result);
+        if ('success' in result) {
+          console.log("  - Success value:", (result as any).success);
+        }
+        console.log("  - Has 'message' property:", 'message' in result);
+        if ('message' in result) {
+          console.log("  - Message value:", (result as any).message);
+        }
+        console.log("  - Has 'user' property:", 'user' in result);
+        console.log("  - Has 'accessToken' property:", 'accessToken' in result);
+      }
+      
+      // Check for the new success response format using type guard
+      if (result && isSuccessResponse(result)) {
+        console.log("Result matched success response format");
+        if (result.success === true) {
+          console.log("Success is true, redirecting to login page");
+          toast({
+            title: "Signup Successful",
+            description: result.message || "Your account has been created successfully. Please check your email to verify your account.",
+          });
+          
+          // Redirect to login page
+          router.replace(`/wordpress-activation?activation_token=${encodeURIComponent(activationToken || '')}&redirect_back=${encodeURIComponent(redirectBack || '')}`);
+          return;
+        } else {
+          // API returned success: false
+          console.log("Success is false, showing error message");
+          setLocalError(result.message || "Account creation failed. Please try again.");
+          toast({
+            title: "Signup Failed",
+            description: result.message || "Account creation failed. Please try again.",
+            variant: "destructive"
+          });
+          return;
+        }
+      }
+      
+      // Backward compatibility with the old format
+      if (result && 'user' in result && 'accessToken' in result) {
+        console.log("Result matched old response format");
         toast({
           title: "Signup Successful",
           description: "Your account has been created successfully.",
@@ -268,18 +398,47 @@ export function SignupForm({ activationToken, redirectBack }: SignupFormProps) {
         
         // Redirect to subscription page with the tokens
         redirectToSubscription(result.accessToken);
-      } else {
-        toast({
-          title: "Signup Failed",
-          description: error || "Account creation failed. Please try again.",
-          variant: "destructive"
-        });
+        return;
       }
+      
+      // Plain object with success/message structure but doesn't match the type guard
+      if (result && typeof result === 'object') {
+        if ('success' in result && (result as any).success === true) {
+          console.log("Result has success:true but didn't match type guard");
+          const message = 'message' in result ? (result as any).message : "Your account has been created successfully.";
+          
+          toast({
+            title: "Signup Successful",
+            description: message,
+          });
+          
+          // Redirect to login page
+          router.push(`/wordpress-activation/login?activation_token=${encodeURIComponent(activationToken || '')}&redirect_back=${encodeURIComponent(redirectBack || '')}&message=${encodeURIComponent(message)}`);
+          return;
+        }
+      }
+      
+      // If we get here, neither success case matched
+      console.log("No success case matched, showing generic error");
+      
+      // Get the latest error, either from the context or use a generic message
+      const currentError = error || localError;
+      setLocalError(currentError || "Account creation failed. Please try again.");
+      
+      toast({
+        title: "Signup Failed",
+        description: currentError || "Account creation failed. Please try again.",
+        variant: "destructive"
+      });
     } catch (err) {
       console.error("Signup error:", err);
+      setIgnoreContextError(true); // Ignore context errors after a catch
+      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred";
+      setLocalError(errorMessage);
+      
       toast({
         title: "Signup Error",
-        description: err instanceof Error ? err.message : "An unexpected error occurred",
+        description: errorMessage,
         variant: "destructive"
       });
     }
@@ -316,10 +475,10 @@ export function SignupForm({ activationToken, redirectBack }: SignupFormProps) {
       />
       
       <form onSubmit={handleSubmit} className="space-y-4">
-        {error && (
+        {(localError || (error && !ignoreContextError)) && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
+            <AlertDescription>{localError || error}</AlertDescription>
           </Alert>
         )}
         

@@ -14,6 +14,19 @@ interface WordPressAuthContextType {
   ClearError: () => void;
 }
 
+interface SuccessResponse {
+  success: boolean;
+  message: string;
+}
+
+interface AuthSuccessResponse extends SuccessResponse {
+  user: any;
+  accessToken: string;
+}
+
+
+type AuthReturn = AuthSuccessResponse | SuccessResponse | null;
+
 const WordPressAuthContext = createContext<WordPressAuthContextType | undefined>(undefined);
 
 interface WordPressAuthProviderProps {
@@ -56,9 +69,9 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
     }
   };
   
-  const SignupForWordPress = async (data: SignupData): Promise<{user: any; accessToken: string} | null> => {
+  const SignupForWordPress = async (data: SignupData): Promise<AuthReturn> => {
     setIsLoading(true);
-    setError(null);
+    setError(null); // Clear previous errors
     
     try {
       // Use existing AuthService but don't store token in localStorage
@@ -66,20 +79,39 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
       
       console.log("WordPress Signup response:", response);
       
-      if (response.success && response.user && response.accessToken) {
-        // Do not store token in localStorage, return it instead
-        return {
-          user: response.user,
-          accessToken: response.accessToken
-        };
+      // Handle the success case with the new format
+      if (response.success === true) {
+        // If the response has user and accessToken, return them
+        if (response.user && response.accessToken) {
+          return {
+            success: true,
+            message: response.message || "Registration successful",
+            user: response.user,
+            accessToken: response.accessToken
+          };
+        } else {
+          // Just return the success and message (new format)
+          return {
+            success: true,
+            message: response.message || "Registration successful. Please check your email to verify your account."
+          };
+        }
       } else {
-        setError(response.message || "Signup failed");
-        return null;
+        const errorMsg = response.message || "Signup failed";
+        setError(errorMsg);
+        return {
+          success: false,
+          message: errorMsg
+        };
       }
     } catch (err) {
       console.error("WordPress Signup error:", err);
-      setError(err instanceof Error ? err.message : "An unexpected error occurred");
-      return null;
+      const errorMsg = err instanceof Error ? err.message : "An unexpected error occurred";
+      setError(errorMsg);
+      return {
+        success: false,
+        message: errorMsg
+      };
     } finally {
       setIsLoading(false);
     }
@@ -158,7 +190,7 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
   };
   
   return (
-    <WordPressAuthContext.Provider value={value}>
+    <WordPressAuthContext.Provider value={value as WordPressAuthContextType}>
       {children}
     </WordPressAuthContext.Provider>
   );

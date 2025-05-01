@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { WordPressAuthProvider } from "@/contexts/WordPressAuthContext"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -10,7 +10,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Logo } from "@/components/logo"
 import Image from "next/image"
 
-export default function WordPressActivationPage() {
+// Create a client component that uses useSearchParams
+function WordPressActivationPageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   
@@ -130,6 +131,37 @@ export default function WordPressActivationPage() {
       </div>
     </WordPressAuthProvider>
   )
+}
+
+// Loading component for Suspense
+function WordPressActivationPageLoading() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-50 p-4">
+      <Card className="w-full max-w-md shadow-xl border-orange-200">
+        <CardHeader className="space-y-1">
+          <div className="flex justify-center mb-6">
+            <Logo />
+          </div>
+          <CardTitle className="text-2xl text-center font-bold">Loading</CardTitle>
+          <CardDescription className="text-center">
+            Preparing WordPress integration...
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex justify-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// Main page component with Suspense boundary
+export default function WordPressActivationPage() {
+  return (
+    <Suspense fallback={<WordPressActivationPageLoading />}>
+      <WordPressActivationPageContent />
+    </Suspense>
+  );
 }
 
 // Import login and signup forms at the bottom to avoid having to define them here

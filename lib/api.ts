@@ -45,6 +45,7 @@ export async function ApiRequest<T = any>(
   }
 
   try {
+    console.log(`[API] ${method} ${url}`);
     const response = await fetch(url, options);
     
     // If we get a new token in response headers, update the stored token
@@ -56,25 +57,51 @@ export async function ApiRequest<T = any>(
     // Handle non-JSON responses
     const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
-      const json = await response.json();
+      let json;
+      
+      try {
+        json = await response.json();
+      } catch (jsonError) {
+        console.error('[API] Error parsing JSON response:', jsonError);
+        throw new ApiError(
+          response.status, 
+          `Failed to parse JSON response: ${jsonError instanceof Error ? jsonError.message : 'Unknown error'}`
+        );
+      }
+      
+      // Check if json is undefined or null
+      if (json === undefined || json === null) {
+        console.error('[API] Received undefined or null JSON response');
+        throw new ApiError(response.status, 'Received empty response from server');
+      }
       
       if (!response.ok) {
-        throw new ApiError(response.status, json.message || 'An error occurred', json);
+        const errorMessage = json.message || json.error || 'An error occurred';
+        console.error(`[API] Error response (${response.status}):`, errorMessage);
+        throw new ApiError(response.status, errorMessage, json);
       }
       
       return json as T;
     } else {
       if (!response.ok) {
-        const text = await response.text();
+        let text;
+        try {
+          text = await response.text();
+        } catch (textError) {
+          text = 'Failed to read error response';
+        }
+        console.error(`[API] Non-JSON error response (${response.status}):`, text);
         throw new ApiError(response.status, text || 'An error occurred');
       }
       
-      return await response.text() as unknown as T;
+      const textResponse = await response.text();
+      return textResponse as unknown as T;
     }
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;
     }
+    console.error('[API] Request error:', error);
     throw new ApiError(500, error instanceof Error ? error.message : 'Network error');
   }
 }
@@ -89,6 +116,9 @@ export class ApiError extends Error {
     this.name = 'ApiError';
     this.status = status;
     this.data = data;
+    
+    // Log API errors for easier debugging
+    console.error(`[API Error] ${status}: ${message}`);
   }
 }
 
