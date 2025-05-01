@@ -1,5 +1,55 @@
 # Updates Log
 
+## 2024-12-25
+
+### 15:45 - Fixed Linter Errors in Signup Page
+
+- Added a missing `isValidUrl` function for website URL validation
+- Fixed incorrect property names in the Signup function call to match the SignupData interface
+- Removed invalid Website property from SignupData as it's not part of the interface definition
+- Ensured all property names match the PascalCase convention in the API
+
+### 14:30 - Added Subscription Plan Selection After Signup
+
+- Created a new dedicated plan-selection page for newly signed up users
+- Modified signup flow to redirect users to the plan-selection page if they don't have a trial yet
+- Added logic to automatically redirect to dashboard if user already has a trial subscription
+- Prevented users from selecting trial plans again if they've already used their trial
+- Enhanced the subscription page UI to clearly indicate when trial plans are unavailable
+- Added visual overlay to trial plans that have already been used
+- Improved user experience by showing clear messaging about trial availability
+- Maintained consistent styling with the existing subscription management page
+
+### 16:15 - Added "Subscribe Later" Option
+
+- Added a "Subscribe Later" button at the top of plan selection page
+- Provided an additional "skip for now" option at the bottom of the page
+- Both options redirect users to the dashboard without requiring immediate subscription
+- This allows new users to explore the application before committing to a subscription plan
+- Maintained consistent styling with the existing UI
+
+### 17:00 - Added "Continue Without Plan" Option to Welcome Page
+
+- Added a "Continue Without Plan" button at the top of the welcome page
+- Provided an additional link at the bottom of the page for users who scroll through all plans
+- Both options allow users to proceed directly to the dashboard without selecting a subscription plan
+- Implemented toast notification to inform users they can subscribe later from their dashboard
+- This provides flexibility for users who want to explore the application before committing to a plan
+- Maintained consistent styling with the existing UI
+
+### 18:15 - Implemented Real Subscription Logic on Welcome Page
+
+- Connected welcome page to the subscription API using UseSubscription hook
+- Implemented actual purchase functionality through PurchaseSubscription API method
+- Added dynamic loading of available plans from the subscription API
+- Replaced hardcoded plan data with real subscription plans from the backend
+- Added loading states with spinner during subscription processing
+- Implemented proper error handling with error display for subscription failures
+- Maintained fallback to static plan data when API plans aren't loaded yet
+- Kept the "Continue Without Plan" option for users who want to skip subscription
+- Added detailed error feedback for subscription failures
+- Improved type safety by adding proper type annotations 
+
 ## 2024-12-04
 
 ### 19:15 - Updated Landing Page Color Scheme
@@ -649,7 +699,7 @@
 - Enhanced Google authentication initialization with better error handling
 - Implemented safer environment variable access with detailed validation
 - Updated both login and signup pages for consistent implementation patterns
-- Updated the Updates.md log to document the changes
+- Updated the Updates.md file to document the changes
 - Maintained backward compatibility with existing authentication flow
 
 ## 2024-11-05
@@ -1070,3 +1120,78 @@
 - Corrected the UserDropdown implementation to use the correct props (userName and children)
 - Fixed type mismatch between what was passed to the component and its TypeScript interface
 - Restored the original UserDropdown button with proper styling
+
+## 2025-01-05: WordPress Plugin Integration
+- Added new authentication flow for WordPress plugin integration
+- Created WordPress activation page that handles activation_token and redirect_back query parameters
+- Added login and signup components that preserve the WordPress activation context
+- Created subscription page for WordPress users to select a plan or opt out
+- Implemented flow to redirect back to WordPress with authentication token after completion
+
+## 2025-01-06
+
+### 20:45 - Enhanced Subscription Status Check After Login/Signup
+
+- Added a dedicated useEffect hook for subscription status checking after login/signup
+- Implemented intelligent plan loading that prevents fetching plans when a user already has an active subscription
+- Added console logging to track subscription state transitions for easier debugging
+- Optimized the WordPress activation flow to prioritize subscription status checking
+- Enhanced conditional logic to skip plan fetching for users with active subscriptions
+- This implementation ensures users who log in don't see subscription plans again if they already have one
+- Added a dependency array that properly triggers subscription checks when subscription data or loading state changes
+- Improved code readability with detailed comments explaining the conditional logic
+
+### 20:00 - Improved WordPress Flow for Users with Existing Subscriptions
+
+- Streamlined WordPress integration flow for users with active subscriptions:
+  - Added detection for users with active subscriptions in WordPress integration flow
+  - Bypassed subscription plan selection UI when user already has an active plan
+  - Created a dedicated "Connect Your WordPress Site" UI for users with active subscriptions
+  - Simplified the integration process for existing subscribers
+- Enhanced user experience:
+  - Added clear indication of the active subscription status and plan name
+  - Simplified instructions focused solely on the integration process
+  - Created a prominent "Complete WordPress Integration" button
+  - Displayed features of the user's current plan
+- Improved flow efficiency by eliminating unnecessary steps:
+  - Removed redundant subscription selection for users who already have plans
+  - Focused the UI on the essential integration action
+  - Streamlined the path to completing WordPress integration
+- Maintained consistent integration completion states and success messaging
+
+## 2025-06-14
+
+### 13:30 - Fixed Case Sensitivity Issue in WordPress Subscription Status Check
+
+- Fixed issue where subscription status check was comparing against lowercase "active" instead of "Active"
+- Corrected console log formatting in the subscription check to display status properly
+- Enhanced the URL parameter processing to prevent duplicate subscription data fetching
+- Added detailed logging throughout the WordPress integration flow
+- Improved efficiency by removing duplicate calls to fetch available plans
+- This ensures the subscription status is correctly recognized and users with active subscriptions don't see plans
+
+### 12:15 - Fixed Lint Error in WordPress Activation Subscription Page
+
+- Fixed the TypeScript lint error in the WordPress activation subscription page
+- Removed non-existent `setSubscription` property from the UseSubscription hook destructuring
+- Ensured proper type safety in the subscription component
+- This maintains the enhanced subscription checking functionality while fixing the type error
+
+### 11:45 - Enhanced WordPress Activation Flow with Direct Subscription Check
+
+- Improved WordPress activation subscription page to directly use `/api/user-subscriptions/current` endpoint
+- Implemented more reliable subscription status checking with better error handling
+- Added detailed logging for subscription status checks for easier debugging
+- Enhanced the flow to properly detect existing active subscriptions
+- Streamlined the subscription check process to avoid unnecessary API calls
+- Improved the user experience by showing correct options based on subscription status
+- This ensures users with existing subscriptions don't see subscription plans again
+
+### 10:30 - Fixed Google Sign-In Redirection Issue
+
+- Fixed issue with Google sign-in where successful authentication would show "Required WordPress integration parameters are missing"
+- Modified the `redirectToSubscription` function in LoginForm component to handle null values gracefully
+- Replaced error message with fallback to empty strings for null activation token or redirect URL
+- Added detailed logging of redirect parameters for easier debugging
+- Ensured successful redirection flow even when optional parameters are missing
+- This fixes the redirection after successful Google authentication

@@ -33,6 +33,22 @@ declare global {
   }
 }
 
+// Helper function to validate URLs
+const isValidUrl = (url: string): boolean => {
+  try {
+    // Check if URL has a protocol
+    if (!url.match(/^https?:\/\/.+\..+/)) {
+      return false;
+    }
+    
+    // Use URL constructor for validation
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 // Hardcoded client ID as fallback (same as in .env.local)
 const GOOGLE_CLIENT_ID = "953309403031-68ev06n48b53l7nj60m36q419cnjrbj4.apps.googleusercontent.com";
 
@@ -269,24 +285,23 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setWebsiteError("")
-
+    
     if (password !== confirmPassword) {
       toast({
-        title: "Passwords don't match",
+        title: "Passwords do not match",
         description: "Please make sure your passwords match.",
         variant: "destructive",
       })
       return
     }
 
-    // Validate website if provided
-    if (website && !website.match(/^https?:\/\/.+\..+/)) {
-      setWebsiteError("Please enter a valid URL starting with http:// or https://")
+    if (website && !isValidUrl(website)) {
+      setWebsiteError("Please enter a valid website URL (e.g., https://example.com)")
       return
     }
 
     setIsLoading(true)
-
+    
     try {
       const success = await Signup({
         FirstName: firstName,
@@ -298,18 +313,18 @@ export default function SignupPage() {
       
       if (success) {
         toast({
-          title: "Account Created Successfully",
+          title: "Signup Successful",
           description: "Your account has been created successfully.",
         })
-        router.push("/welcome")
-      } else {
-        throw new Error("Signup failed")
+        
+        // Redirect to plan-selection page instead of welcome
+        router.push("/plan-selection")
       }
     } catch (error) {
       console.error("Signup error:", error)
       toast({
         title: "Signup Failed",
-        description: "There was an error creating your account. Please try again.",
+        description: error instanceof Error ? error.message : "An unknown error occurred",
         variant: "destructive",
       })
     } finally {

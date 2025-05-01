@@ -3,22 +3,34 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { Check, ArrowRight, Zap } from "lucide-react"
+import { Check, ArrowRight, Zap, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { UseSubscription } from "@/hooks/useSubscription"
+import { PurchaseSubscriptionRequest } from "@/lib/services/SubscriptionService"
 
 export default function WelcomePage() {
-  const { user, isAuthenticated, isLoading } = useAuth()
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth()
+  const { 
+    availablePlans, 
+    isLoadingPlans,
+    isPurchasing,
+    purchaseError,
+    FetchAvailablePlans,
+    PurchaseSubscription 
+  } = UseSubscription()
   const router = useRouter()
   const { toast } = useToast()
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
+  const [selectedPlan, setSelectedPlan] = useState<number | null>(null)
+  const [purchasingPlanId, setPurchasingPlanId] = useState<number | null>(null)
+  const [mappedPlans, setMappedPlans] = useState<any[]>([])
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (!authLoading && !isAuthenticated) {
       router.push("/login")
     }
-  }, [isAuthenticated, isLoading, router])
+  }, [isAuthenticated, authLoading, router])
 
   useEffect(() => {
     if (user) {
@@ -29,45 +41,105 @@ export default function WelcomePage() {
     }
   }, [user, toast])
 
-  const handleSelectPlan = (plan: string) => {
-    setSelectedPlan(plan)
-  }
+  // Fetch available plans
+  useEffect(() => {
+    if (isAuthenticated) {
+      FetchAvailablePlans()
+    }
+  }, [isAuthenticated, FetchAvailablePlans])
 
-  const handleStartTrial = (plan: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSelectedPlan(plan);
-    toast({
-      title: "Trial Started",
-      description: `You've started a free trial of the ${plan} plan!`,
-    });
-    router.push("/dashboard");
-  }
-
-  const handleSubscribe = (plan: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSelectedPlan(plan);
-    toast({
-      title: "Subscription Started",
-      description: `You've subscribed to the ${plan} plan!`,
-    });
-    router.push("/dashboard");
-  }
-
-  const handleContinue = () => {
-    if (selectedPlan) {
-      toast({
-        title: "Plan Selected",
-        description: `You've selected the ${selectedPlan} plan. Your free trial has started!`,
+  // Map API plans to UI plans
+  useEffect(() => {
+    if (availablePlans && availablePlans.length > 0) {
+      // Filter active plans and sort (Trial first, then by price)
+      const sortedApiPlans = [...availablePlans]
+        .filter(plan => plan.IsActive)
+        .sort((a, b) => {
+          // Trial plans first
+          if (a.PlanType === "Trial" && b.PlanType !== "Trial") return -1
+          if (a.PlanType !== "Trial" && b.PlanType === "Trial") return 1
+          // Then by price
+          return parseFloat(a.Price?.toString() || "0") - parseFloat(b.Price?.toString() || "0")
+        })
+      
+      // Map API plans to UI format
+      const uiPlans = sortedApiPlans.map(plan => {
+        const isTrial = plan.PlanType === "Trial"
+        return {
+          id: plan.Id,
+          name: plan.Name,
+          price: isTrial || parseFloat(plan.Price?.toString() || "0") === 0 
+            ? "Free" 
+            : `$${parseFloat(plan.Price?.toString() || "0")}`,
+          period: isTrial ? " 14 days" : `/${plan.BillingCycle}`,
+          description: plan.Description,
+          features: [
+            `${plan.MaxTokens.toLocaleString()} tokens ${isTrial ? "included" : `per ${plan.BillingCycle}`}`,
+            `Generate product descriptions, blog posts, and more`,
+            `${isTrial ? "Limited" : "Full"} access to AI features`,
+            ...(!isTrial ? ["24/7 priority support"] : [])
+          ],
+          highlight: isTrial ? "No credit card required" : "",
+          popular: plan.Name.toLowerCase().includes("professional") || plan.Name.toLowerCase().includes("standard"),
+          trial: isTrial,
+          planType: plan.PlanType,
+          apiPlan: plan // keep original API plan data
+        }
       })
-      router.push("/dashboard")
-    } else {
+      
+      setMappedPlans(uiPlans)
+    }
+  }, [availablePlans])
+  
+  const handleSelectPlan = (planId: number) => {
+    setSelectedPlan(planId)
+  }
+
+  const handleSubscribeToPlan = async (planId: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    
+    const plan = mappedPlans.find(p => p.id === planId)
+    if (!plan) return
+    
+    setPurchasingPlanId(planId)
+    
+    try {
+      const request: PurchaseSubscriptionRequest = {
+        SubscriptionPlanId: planId,
+        PaymentMethod: "credit_card", // Default payment method
+        AutoRenew: true // Default to auto-renew
+      }
+      
+      const result = await PurchaseSubscription(request)
+      
+      if (result) {
+        toast({
+          title: plan.trial ? "Trial Started" : "Subscription Successful",
+          description: `You've successfully ${plan.trial ? "started a trial of" : "subscribed to"} the ${result.SubscriptionPlan?.Name} plan.`,
+        })
+        router.push("/dashboard")
+      }
+    } catch (error) {
+      console.error("Subscription error:", error)
       toast({
-        title: "Please select a plan",
-        description: "You need to select a plan to continue.",
-        variant: "destructive",
+        title: "Subscription Failed",
+        description: error instanceof Error ? error.message : "An unknown error occurred",
+        variant: "destructive"
       })
+    } finally {
+      setPurchasingPlanId(null)
     }
   }
+
+  const handleContinueWithoutPlan = () => {
+    toast({
+      title: "Welcome to the Dashboard",
+      description: "You can subscribe to a plan anytime from your dashboard.",
+    })
+    router.push("/dashboard")
+  }
+
+  const isLoading = authLoading || isLoadingPlans
 
   if (isLoading || !isAuthenticated || !user) {
     return (
@@ -77,9 +149,10 @@ export default function WelcomePage() {
     )
   }
 
-  const plans = [
+  // Fallback plans if API plans aren't loaded yet
+  const plans = mappedPlans.length > 0 ? mappedPlans : [
     {
-      id: "trial",
+      id: 1,
       name: "Free Trial",
       price: "Free",
       period: " 14 days",
@@ -88,12 +161,12 @@ export default function WelcomePage() {
         "10,000 tokens included",
         "Generate up to 10 product descriptions",
         "5 enhanced product listings (title, description, features)",
-
       ],
       highlight: "No credit card required",
+      trial: true
     },
     {
-      id: "starter",
+      id: 2,
       name: "Starter",
       price: "$29",
       period: "/month",
@@ -101,12 +174,13 @@ export default function WelcomePage() {
       features: [
         "50,000 tokens per month",
         "Generate up to 50 product descriptions",
-        "25 enhanced product listings (title, description, features, and more)",
+        "25 enhanced product listings",
         "24/7 priority support",
       ],
+      trial: false
     },
     {
-      id: "professional",
+      id: 3,
       name: "Professional",
       price: "$79",
       period: "/month",
@@ -118,9 +192,10 @@ export default function WelcomePage() {
         "24/7 priority support",
       ],
       popular: true,
+      trial: false
     },
     {
-      id: "enterprise",
+      id: 4,
       name: "Enterprise",
       price: "$199",
       period: "/month",
@@ -128,10 +203,10 @@ export default function WelcomePage() {
       features: [
         "Unlimited tokens",
         "Unlimited product descriptions",
-        "Unlimited enhanced product listings (title, description, features, and more)",
+        "Unlimited enhanced product listings",
         "24/7 priority support",
       ],
-      trial: "",
+      trial: false
     },
   ]
 
@@ -148,7 +223,21 @@ export default function WelcomePage() {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Choose a plan that fits your needs. We offer you a 14-day free trial, no credit card required.
           </p>
+          <Button
+            onClick={handleContinueWithoutPlan}
+            variant="outline"
+            className="mt-4 border-gray-300 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+          >
+            Continue Without a Plan <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </motion.div>
+
+        {purchaseError && (
+          <div className="max-w-4xl mx-auto mb-8 bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
+            <p className="font-medium">Subscription Error:</p>
+            <p>{purchaseError.message || "There was an error processing your subscription. Please try again."}</p>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {plans.map((plan, index) => (
@@ -188,7 +277,7 @@ export default function WelcomePage() {
                   </div>
                 )}
                 <ul className="space-y-3 mb-6">
-                  {plan.features.map((feature, i) => (
+                  {plan.features.map((feature: string, i: number) => (
                     <li key={i} className="flex items-start">
                       <Check className="h-5 w-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" />
                       <span className="text-gray-600">{feature}</span>
@@ -196,23 +285,21 @@ export default function WelcomePage() {
                   ))}
                 </ul>
                 <div className="flex space-x-3 h-[40px]">
-                  {plan.id === "trial" ? (
-                    <Button 
-                      onClick={(e) => handleStartTrial(plan.id, e)}
-                      className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 flex-1 h-full"
-                      size="sm"
-                    >
-                      Start Trial
-                    </Button>
-                  ) : (
-                    <Button 
-                      onClick={(e) => handleSubscribe(plan.id, e)}
-                      className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 flex-1 h-full"
-                      size="sm"
-                    >
-                      Subscribe
-                    </Button>
-                  )}
+                  <Button 
+                    onClick={(e) => handleSubscribeToPlan(plan.id, e)}
+                    className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 flex-1 h-full"
+                    size="sm"
+                    disabled={isPurchasing || purchasingPlanId === plan.id}
+                  >
+                    {purchasingPlanId === plan.id ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      plan.trial ? 'Start Free Trial' : 'Subscribe'
+                    )}
+                  </Button>
                 </div>
               </div>
             </motion.div>
@@ -225,14 +312,17 @@ export default function WelcomePage() {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="text-center"
         >
-          {/* <Button
-            onClick={handleContinue}
-            className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 px-8 py-3 text-lg"
-            size="lg"
-          >
-            Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5" />
-          </Button> */}
-          <p className="mt-4 text-gray-600">No credit card required. Cancel anytime.</p>
+          <p className="mt-4 text-gray-600">No credit card required for free trial. Cancel anytime.</p>
+          <p className="mt-2 text-gray-500">
+            Not ready to choose? 
+            <Button 
+              variant="link" 
+              className="text-red-600 hover:text-red-800"
+              onClick={handleContinueWithoutPlan}
+            >
+              Continue to dashboard without a plan
+            </Button>
+          </p>
         </motion.div>
       </div>
     </div>

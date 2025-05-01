@@ -206,7 +206,7 @@ export class AuthService {
    * Register with Google OAuth token
    */
   static async GoogleRegister(data: GoogleAuthData): Promise<AuthResponse> {
-    const response = await Api.post<AuthResponse>('auth/google/register', data);
+    const response = await Api.post<AuthResponse>('auth/google/login', data);
     
     // Store token for future API calls if registration is auto-login
     if (response.accessToken) {

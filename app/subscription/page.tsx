@@ -46,6 +46,7 @@ export default function SubscriptionPage() {
   const [paymentMethod, setPaymentMethod] = useState<string>("credit_card")
   const [autoRenew, setAutoRenew] = useState<boolean>(true)
   const [showConfirmPurchaseDialog, setShowConfirmPurchaseDialog] = useState(false)
+  const [hasUsedTrial, setHasUsedTrial] = useState<boolean>(false)
 
   // Mock payment methods
   const [paymentMethods, setPaymentMethods] = useState([
@@ -69,6 +70,29 @@ export default function SubscriptionPage() {
   useEffect(() => {
     FetchAvailablePlans()
   }, [FetchAvailablePlans])
+
+  // Check if user has previously used a trial plan
+  useEffect(() => {
+    const checkTrialUsage = async () => {
+      try {
+        // You would implement this API call in your SubscriptionService
+        // This is a placeholder for the actual implementation
+        // const result = await SubscriptionService.HasUserUsedTrial()
+        // setHasUsedTrial(result)
+        
+        // For now, we'll check if current subscription is trial or if it has a trial status
+        if (subscription) {
+          setHasUsedTrial(subscription.Status === "Trial" || subscription.Status === "TrialExpired")
+        }
+      } catch (error) {
+        console.error("Error checking trial usage:", error)
+      }
+    }
+    
+    if (subscription) {
+      checkTrialUsage()
+    }
+  }, [subscription])
 
   const isLoading = authLoading || subscriptionLoading || isLoadingPlans
 
@@ -387,7 +411,7 @@ export default function SubscriptionPage() {
                         We use industry-standard encryption to protect your payment information.
                       </p>
                       <a
-                        href="/security"
+                        href="#"
                         className="text-sm text-blue-600 hover:text-blue-800 font-medium inline-flex items-center"
                       >
                         Learn more
@@ -399,7 +423,7 @@ export default function SubscriptionPage() {
                   <Button 
                     variant="outline" 
                     className="w-full border-orange-200 text-orange-600 hover:bg-orange-50 mt-2" 
-                    onClick={() => router.push("/faq")}
+                    onClick={() => {}}
                   >
                     View FAQ
                   </Button>
@@ -460,6 +484,7 @@ export default function SubscriptionPage() {
                   const isFree = parseFloat(plan.Price?.toString() || "0") === 0;
                   const isTrialPlan = plan.PlanType === "Trial";
                   const priceDisplay = isFree ? "Free" : `${formatCurrency(plan.Price?.toString() || "0", plan.Currency)}`;
+                  const isTrialUnavailable = isTrialPlan && hasUsedTrial;
                   
                   // Animation delay based on index
                   const delay = index * 0.1;
@@ -476,6 +501,19 @@ export default function SubscriptionPage() {
                           : "hover:scale-102 shadow-md hover:shadow-lg"
                       }`}
                     >
+                      {/* Trial Unavailable Overlay */}
+                      {isTrialUnavailable && (
+                        <div className="absolute inset-0 bg-gray-200 bg-opacity-70 flex flex-col items-center justify-center z-10 p-4">
+                          <AlertCircle className="h-8 w-8 text-orange-500 mb-2" />
+                          <p className="text-center font-medium text-gray-900">
+                            You've already used your trial
+                          </p>
+                          <p className="text-center text-sm text-gray-700 mt-1">
+                            Please select another plan to continue
+                          </p>
+                        </div>
+                      )}
+                      
                       {/* Card Background */}
                       <div
                         className={`h-full flex flex-col border-2 rounded-xl overflow-hidden ${
@@ -484,7 +522,7 @@ export default function SubscriptionPage() {
                             : isCurrentPlan 
                               ? "border-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50"
                               : "border-gray-200 bg-white hover:border-gray-300"
-                        }`}
+                        } ${isTrialUnavailable ? "opacity-60" : ""}`}
                       >
                         {/* Plan Header */}
                         <div className={`px-5 py-4 border-b ${
@@ -556,24 +594,23 @@ export default function SubscriptionPage() {
                           </div>
                         </div>
                         
-                        {/* Selection Button */}
-                        <div className="p-5 border-t border-gray-100">
-                          <Button 
+                        {/* Plan Actions */}
+                        <div className="px-5 py-4 bg-gray-50 border-t border-gray-100">
+                          <Button
+                            onClick={() => {
+                              if (!isTrialUnavailable) {
+                                setSelectedPlan(plan.Id);
+                                handleProceedToPurchase();
+                              }
+                            }}
+                            disabled={isCurrentPlan || isTrialUnavailable}
                             className={`w-full ${
-                              isCurrentPlan
-                                ? "bg-blue-500 hover:bg-blue-600 cursor-default"
-                                : selectedPlan === plan.Id
-                                  ? "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600"
-                                  : "bg-gray-800 hover:bg-gray-900"
+                              isCurrentPlan || isTrialUnavailable
+                                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                : "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white"
                             }`}
-                            disabled={isCurrentPlan}
-                            onClick={() => setSelectedPlan(plan.Id)}
                           >
-                            {isCurrentPlan 
-                              ? "Current Plan" 
-                              : selectedPlan === plan.Id 
-                                ? "Selected" 
-                                : "Select Plan"}
+                            {isCurrentPlan ? "Current Plan" : (isTrialUnavailable ? "Not Available" : "Select Plan")}
                           </Button>
                         </div>
                         

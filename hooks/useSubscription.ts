@@ -113,10 +113,18 @@ export function UseSubscription() {
     }
   }, [isAuthenticated, FetchSubscription]);
 
-  // Fetch available plans on mount
+  // Fetch available plans on mount, but only if we don't have an active subscription
   useEffect(() => {
-    FetchAvailablePlans();
-  }, [FetchAvailablePlans]);
+    // If we already have a subscription and it's active, we may not need plans
+    // This is a default behavior that components can override by explicitly calling FetchAvailablePlans
+    const hasActiveSubscription = subscription && subscription.Status === "Active";
+    
+    if (!hasActiveSubscription) {
+      FetchAvailablePlans();
+    } else {
+      console.log("Active subscription detected, skipping automatic plan fetching");
+    }
+  }, [subscription, FetchAvailablePlans]);
 
   return {
     subscription,
