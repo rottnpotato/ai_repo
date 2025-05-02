@@ -1,24 +1,24 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Amperly AI",
+  title: "WooCommerce AI",
   description: "Automate customer interactions with powerful AI to help businesses grow",
   generator: 'next.js',
   keywords: ['AI', 'customer support', 'automation', 'business growth', 'artificial intelligence'],
-  authors: [{ name: 'Amperly AI Team' }],
-  creator: 'Amperly AI',
-  publisher: 'Amperly AI',
-  metadataBase: new URL('https://amperlyai.com'),
+  authors: [{ name: 'WooCommerce  AI Team' }],
+  creator: 'WooCommerce AI',
+  publisher: 'WooCommerce AI',
+  metadataBase: new URL('https://WooCommerceai.com'),
   openGraph: {
-    title: 'Amperly AI',
+    title: 'WooCommerce AI',
     description: 'Automate support with AI that grows your business',
-    siteName: 'Amperly AI',
+    siteName: 'WooCommerce AI',
     images: ['/og-image.jpg'],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Amperly AI',
+    title: 'WooCommerce AI',
     description: 'Automate support with AI that grows your business',
     images: ['/twitter-image.jpg'],
   },

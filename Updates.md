@@ -1360,3 +1360,37 @@
 - Enhanced debugging with detailed parameter logging at component mount, credential receipt, and pre-redirect stages
 - Improved error handling to provide better feedback when WordPress integration parameters are missing
 - Fixed issue where Google login wasn't properly capturing WordPress activation parameters
+
+## 2024-07-23
+
+### 11:15 - Updated CORS Middleware to Handle Root Path OPTIONS Requests
+
+- Modified the middleware.ts matcher configuration to handle OPTIONS requests for all paths
+- Updated the matcher to include both '/:path*' and '/' patterns
+- Fixed 400 error that occurred when OPTIONS requests were made to the root path
+- Ensured consistent CORS handling across the entire application, not just API routes
+- This change complements the existing CORS configuration in next.config.mjs
+- Improved cross-origin request handling for external services accessing the application
+
+### 10:00 - Added Middleware for CORS OPTIONS Request Handling
+
+- Created a new middleware.ts file at the root to specifically handle OPTIONS preflight requests
+- Implemented proper CORS headers for preflight requests to enable cross-origin API access
+- Configured middleware to only target API routes with matcher configuration
+- Added appropriate Access-Control-Allow headers to comply with CORS requirements
+- Set Access-Control-Max-Age to 86400 seconds (24 hours) to optimize preflight caching
+- Ensured middleware passes through non-OPTIONS requests to their handlers
+- This middleware complements the existing CORS configuration in next.config.mjs
+
+## 2024-07-12
+
+### 10:45 - Added WordPress Admin Redirect After Successful Integration
+
+- Enhanced the WordPress integration flow with automatic redirect to plugin settings page
+- Modified both handleOptOut and handleWordPressIntegration functions to extract the base URL from redirectBack parameter
+- Added redirection to "/wp-admin/admin.php?page=waip-settings" after successful POST request
+- Updated toast notification message to inform users about the redirection
+- Improved user experience by automatically taking users to the plugin settings page
+- Used the window.location.href method to perform a proper 302 redirect
+- Maintained all existing functionality while adding the redirect capability
+- This eliminates the need for users to manually navigate to the plugin settings after integration

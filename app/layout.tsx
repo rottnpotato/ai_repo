@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <title>Amperly AI | Automate customer interactions with AI</title>
+        <title>WooCommerce AI | Automate customer interactions with AI</title>
       </head>
       <body className={figtree.className}>
         {/* SessionProvider is maintained for backward compatibility */}

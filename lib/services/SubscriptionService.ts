@@ -261,7 +261,7 @@ export class SubscriptionService {
         throw new ApiError(400, 'Invalid subscription plan data');
       }
       
-      return await Api.post<SubscriptionPlan>(`/api/subscription-plans/${id}`, plan);
+      return await Api.patch<SubscriptionPlan>(`/api/subscription-plans/${id}`, plan);
     } catch (error) {
       console.error(`[SubscriptionService] Error updating subscription plan ${id}:`, error);
       throw error;

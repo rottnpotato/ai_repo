@@ -192,10 +192,14 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
         throw new Error(`Error ${response.status}: ${response.statusText}`)
       }
       
+      // Extract base URL from redirectBack
+      const baseUrl = new URL(redirectBack).origin
+      const wordpressAdminUrl = `${baseUrl}/wp-admin/admin.php?page=waip-settings`
+      
       // Show success message after POST completes successfully
       toast({
         title: "WordPress Integration Complete",
-        description: "Your WordPress site has been successfully connected."
+        description: "Your WordPress site has been successfully connected. Redirecting to WordPress admin..."
       })
       
       // Update UI to show completion state
@@ -203,6 +207,9 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
         isRedirecting: false,
         integrationComplete: true 
       })
+      
+      // Redirect to WordPress admin settings page
+      window.location.href = wordpressAdminUrl
       
     } catch (err) {
       console.error("Opt-out error:", err)
@@ -247,10 +254,14 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
         throw new Error(`Error ${response.status}: ${response.statusText}`)
       }
       
+      // Extract base URL from redirectBack
+      const baseUrl = new URL(redirectBack).origin
+      const wordpressAdminUrl = `${baseUrl}/wp-admin/admin.php?page=waip-settings`
+      
       // Show success message after POST completes successfully
       toast({
         title: "WordPress Integration Complete",
-        description: "Your WordPress site has been successfully connected."
+        description: "Your WordPress site has been successfully connected. Redirecting to WordPress admin..."
       })
       
       // Update UI to show completion state
@@ -258,6 +269,9 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
         isRedirecting: false,
         integrationComplete: true 
       })
+      
+      // Redirect to WordPress admin settings page
+      window.location.href = wordpressAdminUrl
       
     } catch (err) {
       console.error("Integration error:", err)

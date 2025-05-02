@@ -14,7 +14,7 @@ export default function LandingPage() {
             <div className="w-8 h-8 rounded-md bg-gradient-to-br from-orange-400 to-red-600 flex items-center justify-center">
               <span className="text-white font-bold text-lg">A</span>
             </div>
-            <h1 className="text-xl font-bold text-foreground">Amperly AI</h1>
+            <h1 className="text-xl font-bold text-foreground">WooCommerce AI</h1>
           </div>
           <nav className="hidden md:flex items-center space-x-8">
             <Link href="#" className="text-foreground/80 hover:text-foreground transition-colors">
@@ -141,7 +141,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to transform your WooCommerce store?</h2>
           <p className="text-white/80 max-w-2xl mx-auto mb-8">
-            Join hundreds of WooCommerce store owners already using Amperly AI to optimize their product listings and boost their organic traffic.
+            Join hundreds of WooCommerce store owners already using WooCommerce AI to optimize their product listings and boost their organic traffic.
           </p>
           <Link href="/login">
           <Button className="bg-white text-orange-600 hover:bg-white/90 text-lg py-6 px-8">
@@ -160,7 +160,7 @@ export default function LandingPage() {
                 <div className="w-8 h-8 rounded-md bg-gradient-to-br from-orange-400 to-red-600 flex items-center justify-center">
                   <span className="text-white font-bold text-lg">A</span>
                 </div>
-                <h1 className="text-xl font-bold">Amperly AI</h1>
+                <h1 className="text-xl font-bold">WooCommerce AI</h1>
               </div>
               <p className="text-white/70 max-w-xs">
                 AI-powered product optimization for WooCommerce stores to boost SEO and increase conversions.
@@ -206,7 +206,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-white/10 text-center text-white/60 text-sm">
-            &copy; {new Date().getFullYear()} Amperly AI. All rights reserved.
+            &copy; {new Date().getFullYear()} WooCommerce AI. All rights reserved.
           </div>
         </div>
       </footer>

@@ -44,7 +44,7 @@ export const Logo: FC<LogoProps> = ({ size = "md", withText = true, className = 
           <span
             className={`font-bold ${textSizes[size]} bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent leading-tight`}
           >
-            Amperly AI
+            WooCommerce AI
           </span>
           {size !== "sm" && <span className="text-xs font-medium text-gray-500 -mt-1">Automate customer interactions</span>}
         </div>
