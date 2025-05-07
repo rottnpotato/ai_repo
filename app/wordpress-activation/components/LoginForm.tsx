@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
 import { UseWordPressAuth } from "@/contexts/WordPressAuthContext"
+import { UseWordPressIntegration } from "@/contexts/WordPressIntegrationContext"
 import { useToast } from "@/hooks/use-toast"
 import Script from "next/script"
 
@@ -44,6 +45,7 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
   const [mountId, setMountId] = useState(Date.now())
   
   const { LoginForWordPress, GoogleLoginForWordPress, isLoading, error, ClearError } = UseWordPressAuth()
+  const { SetIntegrationActive } = UseWordPressIntegration()
   const { toast } = useToast()
   const router = useRouter()
   const googleButtonRef = useRef<HTMLDivElement>(null);
@@ -184,8 +186,12 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
         redirectBack
       });
       
+      // Store activation parameters in local variables to ensure they're preserved
+      const currentActivationToken = activationToken;
+      const currentRedirectBack = redirectBack;
+      
       // Validate activation parameters
-      if (!activationToken) {
+      if (!currentActivationToken) {
         console.warn("[WP-GoogleAuth] Missing activation token for WordPress integration");
       }
       
@@ -219,12 +225,13 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
         
         // Before redirecting, verify we have the WordPress activation parameters
         console.log("[WP-GoogleAuth] Pre-redirect WordPress parameters check:", {
-          activationToken,
-          redirectBack
+          activationToken: currentActivationToken,
+          redirectBack: currentRedirectBack
         });
         
         // Redirect to subscription page with the WordPress activation tokens
-        redirectToSubscription(result.accessToken);
+        // Explicitly pass the preserved values to ensure they're not lost
+        redirectToSubscription(result.accessToken, currentActivationToken, currentRedirectBack);
       } else {
         console.error("[WP-GoogleAuth] Incomplete authentication result:", result);
         toast({
@@ -258,6 +265,10 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
     
     ClearError();
     
+    // Store activation parameters in local variables to ensure they're preserved
+    const currentActivationToken = activationToken;
+    const currentRedirectBack = redirectBack;
+    
     try {
       // Login using WordPress auth context
       const result = await LoginForWordPress({ email, password });
@@ -269,7 +280,7 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
         });
         
         // Redirect to subscription page with the tokens
-        redirectToSubscription(result.accessToken);
+        redirectToSubscription(result.accessToken, currentActivationToken, currentRedirectBack);
       } else {
         toast({
           title: "Login Failed",
@@ -287,7 +298,11 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
     }
   }
 
-  const redirectToSubscription = (accessToken: string | undefined) => {
+  const redirectToSubscription = (
+    accessToken: string | undefined, 
+    currentActivationToken: string | null = activationToken, 
+    currentRedirectBack: string | null = redirectBack
+  ) => {
     // Validate that accessToken exists
     if (!accessToken) {
       console.error("[WP-Auth] Missing access token for redirect");
@@ -300,8 +315,8 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
     }
     
     // Use empty strings as fallbacks if activationToken or redirectBack are null
-    const token = activationToken || '';
-    const redirect = redirectBack || '';
+    const token = currentActivationToken || '';
+    const redirect = currentRedirectBack || '';
     
     // Log for debugging purposes
     console.log("[WP-Auth] Redirecting with params:", { 
@@ -309,6 +324,9 @@ export function LoginForm({ activationToken, redirectBack }: LoginFormProps) {
       redirectBack: redirect,
       accessToken 
     });
+    
+    // Set WordPress integration status as active in the global context
+    SetIntegrationActive();
     
     // Navigate to the subscription page with the necessary tokens
     router.push(`/wordpress-activation/subscription?activation_token=${encodeURIComponent(token)}&redirect_back=${encodeURIComponent(redirect)}&access_token=${encodeURIComponent(accessToken)}`);

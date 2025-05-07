@@ -1,5 +1,47 @@
 # Updates Log
 
+## 2024-07-18
+
+### 16:30 - Enhanced Admin User Management Display
+
+- Updated admin user management page to filter out admin users from the displayed list
+- Fixed subscription plan display to show accurate plan information instead of hardcoded "professional"
+- Added "No Active Subscription" indicator when a user doesn't have an active subscription
+- Improved AdminService.MapBackendUserToFrontend method to properly map subscription plan from backend data
+- Enhanced user data mapping to include additional fields like PluginActivation, TokensUsed, and Company
+- Added fallback values for subscription plan, defaulting to "Free" instead of an empty string
+- Made the UI more informative by clearly indicating when users don't have an active subscription
+
+### 14:45 - Added Direct Link to Manage Tokens from User Names in Admin Panel
+
+- Updated the user management page to redirect admins to the token management page when clicking on a user's name
+- Changed link destination from `/admin/users/${user.id}` to `/admin/users/${user.id}/tokens`
+- Improved admin workflow by providing a more direct path to token management
+- Maintained consistent styling with existing UI elements
+- Streamlined the admin experience by reducing clicks needed for token management
+
+### 17:15 - Implemented Real-time Subscription Data in Admin User Management
+
+- Enhanced admin user management page to fetch actual subscription data for each user
+- Added integration with SubscriptionService.GetUserSubscriptions API to get subscription details
+- Improved display of subscription plans to show the actual plan name from subscription data
+- Added token usage display showing both used and maximum tokens from subscription plan
+- Implemented UserWithSubscription interface to track subscription data for each user
+- Added proper handling of active/inactive subscription status based on real subscription data
+- Made the UI more informative by showing token limits alongside usage statistics
+- Enhanced error handling to continue processing users even if subscription fetch fails for some
+
+## 2024-07-12
+
+### 11:30 - Implemented Stripe Payment Process
+
+- Integrated Stripe payment process to welcome page, WordPress activation page, and subscription page
+- Added implementation using the `/api/stripe/create-checkout` endpoint
+- Configured payment to handle subscription plans with parameters for SubscriptionPlanId, PaymentMethod, and AutoRenew
+- Added proper redirect handling to Stripe checkout URL
+- Ensured consistent implementation across all relevant pages
+- Maintained existing UI while adding new payment functionality
+
 ## 2024-04-16
 
 ### 14:15 - Wrapped useSearchParams in Suspense Boundary in WordPress Subscription Page
@@ -986,247 +1028,11 @@
 - Updated button states to reflect the purchase process (disabled, loading, etc.)
 - Added special handling for trial vs. paid subscription plans
 
-## [2023-11-15] - Code Analysis
-
-### Components
-- **SubscriptionService.ts**
-  - Contains interfaces for `SubscriptionPlan`, `UserSubscription`, and `PurchaseSubscriptionRequest`
-  - Already has a `PurchaseSubscription` method implemented for API calls to the subscription endpoint
-
-- **Subscription Page (app/subscription/page.tsx)**
-  - Comprehensive React component that handles:
-    - Display of current subscription details
-    - Listing available subscription plans
-    - Handling payment methods
-    - Managing subscription purchase flow
-  - Includes dialogs for:
-    - Adding payment methods
-    - Changing subscription plans
-    - Confirming subscription purchases
-
-- **UseSubscription Hook (hooks/useSubscription.ts)**
-  - Custom hook that provides functions for interacting with the SubscriptionService
-  - Includes `PurchaseSubscription` function that calls the service method
-  - Manages loading states and error handling
-
-### Purchase Flow
-1. User selects a subscription plan in the Change Plan dialog
-2. User clicks "Proceed to Purchase" button, which calls `handleProceedToPurchase()`
-3. Confirm Purchase dialog opens with plan details and payment options
-4. User confirms purchase, which calls `handleConfirmPurchase()`
-5. `handleConfirmPurchase()` calls the `PurchaseSubscription()` function from the UseSubscription hook
-6. The hook calls the `PurchaseSubscription()` method in the SubscriptionService
-7. On success, the dialog closes and a toast notification is shown
-
-## 2024-10-30
-
-### 11:15 - Fixed Dashboard User Interface Issues
-
-- Fixed the account button showing undefined user name by passing userName prop to UserDropdown
-- Updated UserDropdown component to accept and use a userName prop with proper fallbacks
-- Changed Quick Actions section labels from "Coming Soon" to "To Be Implemented"
-- Added visual indicators with AlertTriangle icon to clearly mark incomplete features
-- Enhanced Usage Statistics section with "To Be Implemented" notice and warning icon
-- Improved overall user experience by providing clearer indicators of in-progress features
-- Made Quick Actions cards non-clickable since functionality isn't yet implemented
-- Ensured consistent styling across warning indicators and section labels
-
-## 2024-11-12
-
-### Improved Logout Functionality
-
-#### 15:30 - Enhanced Logout Implementation
-- Updated the UserDropdown component to perform direct logout via the auth context instead of redirecting to the logout page
-- Implemented a HandleLogout function that calls the logout method and redirects to login page
-- Ensured proper error handling during the logout process
-- Used the POST localhost:3000/auth/logout endpoint for server-side session invalidation
-- Improved user experience by making logout more efficient (avoiding an extra page load)
-
-### Unified Login Experience
-
-#### 16:30 - Unified User and Admin Login Form
-- Removed separate login tabs for users and admins, creating a single unified login form
-- Modified login flow to check user role after successful authentication
-- Updated redirection logic to send users to appropriate pages based on role (admin or user)
-- Improved Google login to also respect role-based redirection
-- Simplified the login UI for a more streamlined user experience
-- Removed redundant code and consolidated authentication logic
-- Enhanced toast notifications for better user feedback
-- Used the Login method from the AuthContext for all authentication attempts
-
-#### 17:45 - Fixed Google Sign-In Button Rendering Issues
-- Implemented a robust Google Sign-In button rendering system with multiple retry mechanisms
-- Added state tracking for button rendering status to improve reliability
-- Implemented an automatic retry mechanism (up to 3 attempts) when button fails to render
-- Added a fallback manual Google Sign-In option when automatic rendering fails
-- Enhanced error feedback with a clear alert when Google Sign-In cannot be initialized
-- Added loading indicator during Google Sign-In button initialization
-- Improved error handling throughout the Google authentication flow
-- Fixed race conditions between script loading and DOM element availability
-- Added proper cleanup for event intervals to prevent memory leaks
-- Enhanced logging with consistent prefixes for better debugging
-
-#### 19:15 - Fixed Google Sign-In Button Persistence During Navigation
-- Resolved issue with Google Sign-In button disappearing when navigating between login and signup pages
-- Implemented component mount/unmount tracking to properly manage Google Sign-In button state
-- Added pathname dependency to re-initialize Google button when navigating between pages
-- Implemented a "mountId" system to force button re-rendering when component remounts
-- Enhanced component lifecycle management with proper cleanup of resources
-- Added safety checks to prevent state updates on unmounted components
-- Improved container element reference management to ensure consistent rendering
-- Applied consistent fixes to both login and signup pages for seamless navigation
-- Added visual loading indicator during button initialization after navigation
-- Implemented immediate button initialization when returning to previously visited pages
-
-## 2024-11-13
-
-### UI Enhancements for Authentication Pages
-
-#### 14:45 - Added Password Toggle Feature to Login and Signup Pages
-- Implemented password visibility toggle buttons on login and signup pages
-- Added Eye/EyeOff icons from lucide-react for visual indication of password visibility
-- Created state variables to track password visibility state (isPasswordVisible)
-- Added toggle functions to switch between masked and visible password text
-- Positioned toggle buttons within the password input fields using absolute positioning
-- Enhanced user experience by allowing users to verify their password entry
-- Applied consistent styling across both login and signup pages
-- Added ARIA labels for better accessibility
-- Implemented the feature for both password and confirm password fields on signup page
-- Used proper button variants that integrate with the existing design system
-
-## 2024-11-15
-
-### Password Visibility Feature Verification
-
-#### 10:30 - Confirmed Password Toggle Feature Implementation
-- Verified that password toggle functionality is properly implemented in both login and signup pages
-- Confirmed presence of state variables (isPasswordVisible) to track password visibility
-- Verified toggle functions are correctly implemented and working as expected
-- Confirmed proper implementation of Eye/EyeOff icons for visual indication
-- Verified that both password and confirm password fields on signup page have toggle functionality
-- All accessibility features are properly implemented with appropriate ARIA labels
-- Password toggle buttons are correctly positioned and styled within the input fields
-
-### Login Page Bug Fix
-
-#### 11:45 - Fixed Invalid Hook Call in Login Page
-- Fixed critical error: "Invalid hook call. Hooks can only be called inside of the body of a function component"
-- Moved the `isAdmin` destructuring from `useAuth()` to the component level instead of inside the `handleSubmit` function
-- Removed duplicate hook calls that violated React's Rules of Hooks
-- Ensured proper adherence to React Hook rules by only calling hooks at the top level
-- Fixed the same issue in the Google login handler for consistency
-- Improved code organization by properly destructuring all required auth context properties at the component level
-- Enhanced error resilience by removing potential sources of React hook violations
-- Maintained all existing functionality while fixing the structural issue
-- Login flow now properly redirects users based on their role without errors
-
-#### 12:30 - Fixed Admin Access Issue After Login
-- Resolved issue where users could not access admin pages after login
-- Changed approach to use full auth context object instead of destructuring isAdmin at component level
-- Modified redirection logic to read the latest isAdmin value from the auth context at redirect time
-- Preserved the fix for invalid hook calls while ensuring admin access works properly
-- Ensured that both standard and Google login methods correctly redirect admins to admin pages
-- Maintained backward compatibility with the rest of the authentication system
-- Avoided unnecessary re-renders by keeping login and GoogleLogin destructured at component level
-- Improved code resilience by accessing isAdmin directly from the context object
-- Admin users can now properly access admin pages after successful authentication
-
-#### 13:15 - Reverted to Initial Fix Implementation for Admin Access
-- Rolled back to the original implementation that properly fixed both the invalid hook call and maintained admin access
-- Returned to destructuring `isAdmin` at component level with the `Login` and `GoogleLogin` functions
-- Confirmed that this approach correctly fixes the invalid hook call without breaking admin access
-- Maintained consistent redirection to admin pages based on user role
-- Simplified the code by avoiding unnecessary changes to the auth context usage
-- Ensured proper functioning for both standard login and Google authentication flows
-- Kept clean implementation that follows React best practices while preserving all functionality
-- Fixed regressions in the login flow to restore intended behavior
-
-#### 14:30 - Implemented Role-Based Redirection from User Role
-- Updated login page to use the role field from the user object in auth context instead of isAdmin flag
-- Removed dependency on isAdmin property to determine admin status
-- Added explicit role checking to properly handle admin redirections
-- Improved both standard and Google login handlers to use consistent role checking approach
-- Used user?.role property accessed via the auth context after successful login
-- Implemented a more direct approach that relies on the actual role value from the server
-- Enhanced compatibility with the server response structure
-- Fixed edge cases where isAdmin flag might not be properly synchronized with the user role
-- Kept all login error handling intact while improving the redirection logic
-
-## 2025-05-01 - Admin Subscription Plan Management
-
-### 09:00 - Implemented Admin Subscription Plan Management 
-- Added subscription plan management interface in admin panel
-- Created new subscription plan API client functions
-- Built subscription plan listing, creation, editing, and deletion functionality
-- Added ability for admin to add tokens to user subscriptions
-- Implemented proper TypeScript interfaces for subscription plans
-- Integrated with backend API endpoints from api.md
-
-#### Implementation Details:
-- Created a main subscription plans page in the admin panel that displays all subscription plans in a card grid
-- Added ability to create new subscription plans through a modal dialog with form validation
-- Created an edit page for modifying existing subscription plans with a form that allows changing all plan details
-- Implemented deletion of subscription plans with confirmation dialog
-- Added functionality to add tokens to user subscriptions directly from the user management page
-- Used the proper API endpoints for all CRUD operations as specified in the api.md file
-- Added proper error handling and loading states for all API operations
-- Ensured all forms use proper validation and data formatting
-- Implemented responsive layout for all new pages
-
-#### Changes Made:
-- Created `app/admin/subscription-plans/page.tsx` for subscription plan management
-- Created `app/admin/subscription-plans/[id]/page.tsx` for editing specific plans
-- Added new API utility functions in `lib/services/SubscriptionService.ts`
-- Updated admin sidebar to include subscription plans link
-- Updated admin layout with subscription management navigation
-- Added UI components for managing subscription plans
-- Improved error handling for subscription plan operations
-- Updated the users page to add token management functionality
-
-#### Next Steps:
-- Add statistics for subscription plan usage
-- Implement bulk operations for subscription plans
-- Add subscription plan analytics dashboard
-- Improve user assignment to subscription plans
-
-## 2023-07-23
-
-### Fixed undefined user role issue
-- Modified `apiUserToUIUser` function in `contexts/AuthContext.tsx` to ensure the role is always defined, defaulting to "user" if not present in the API response
-- Updated Login and GoogleLogin methods to return the user object directly instead of a boolean success flag
-- Eliminated timing issues by using the returned user object directly in the login page instead of accessing it from context state
-- Improved error handling in both authentication methods
-- Updated legacy authentication methods to maintain compatibility with the new return types
-- Added authentication check to login page to prevent authenticated users from accessing the login page via the back button
-- Used router.replace instead of router.push for redirects to properly manage navigation history
-- This fixes the issue where the user role was undefined after successful login, preventing proper routing to admin or dashboard pages
-
-## 2025-04-29 - Backend API Integration for Admin Users Page
-- Replaced mock user data with real data from the backend API on the admin/users page
-- Created a new AdminService class to handle admin-specific API calls
-- Added proper error handling and loading states when fetching user data
-- Implemented mapping logic to convert backend user data format to frontend format
-- Updated the fetchUsers function in the UsersPage component to use the new AdminService
-- Added toast notifications for error scenarios to improve user experience
-
-## 2024-11-25
-
-### 10:45 - Removed Static Exports Throughout the App
-
-- Updated `next.config.mjs` to remove the static export configuration (`output: 'export'`)
-- Removed all `generateStaticParams()` functions from dynamic route pages:
-  - `/app/admin/users/[userId]/tokens/page.tsx`
-  - `/app/admin/subscription-plans/[id]/page.tsx`
-- Removed `dynamic = 'force-static'` configuration from all API routes:
-  - `/app/api/auth/[...nextauth]/route.ts`
-  - `/app/api/auth/_log/route.ts`
-  - `/app/api/auth/providers/route.ts`
-  - `/app/api/auth/error/route.ts`
-  - `/app/api/auth/csrf/route.ts`
-  - `/app/api/auth/callback/credentials/route.ts`
-- Converted the app to use dynamic server-side rendering instead of static exports
-- Updated API routes to support full server functionality (no longer just stubs)
-- Enabled server-side features in Next.js for improved performance and functionality
+## [2024-03-21] - Implemented Stripe Checkout Integration
+- Updated `SubscriptionService.PurchaseSubscription` to use Stripe Checkout instead of direct purchase
+- Created new API route `/api/stripe/create-checkout` for handling Stripe Checkout session creation
+- Added proper error handling and type safety for Stripe integration
+- Subscription purchases now redirect to Stripe's hosted checkout page for secure payment processing
 
 ## 2023-06-14 13:45 - Dashboard Updated to Use Real Data
 
@@ -1361,36 +1167,75 @@
 - Improved error handling to provide better feedback when WordPress integration parameters are missing
 - Fixed issue where Google login wasn't properly capturing WordPress activation parameters
 
-## 2024-07-23
+## 2024-07-22
 
-### 11:15 - Updated CORS Middleware to Handle Root Path OPTIONS Requests
+### 14:30 - Added WordPress Integration Status Tracking
 
-- Modified the middleware.ts matcher configuration to handle OPTIONS requests for all paths
-- Updated the matcher to include both '/:path*' and '/' patterns
-- Fixed 400 error that occurred when OPTIONS requests were made to the root path
-- Ensured consistent CORS handling across the entire application, not just API routes
-- This change complements the existing CORS configuration in next.config.mjs
-- Improved cross-origin request handling for external services accessing the application
+- Implemented a new local state to track WordPress plugin activation status
+- Added visual indicators showing "active" or "inactive" plugin status in the WordPress activation UI  
+- Created integration between login/signup forms and WordPress activation status tracking
+- Modified the subscription page to include integration status in redirect URLs
+- Added success parameter in WordPress admin redirect URLs to maintain activation state
+- Enhanced user experience by showing clear visual feedback about plugin activation status
+- Implemented proper callback pattern with onIntegrationSuccess prop to update activation status
+- Improved user feedback with green status badges when integration is successful
 
-### 10:00 - Added Middleware for CORS OPTIONS Request Handling
+## 2024-07-18
 
-- Created a new middleware.ts file at the root to specifically handle OPTIONS preflight requests
-- Implemented proper CORS headers for preflight requests to enable cross-origin API access
-- Configured middleware to only target API routes with matcher configuration
-- Added appropriate Access-Control-Allow headers to comply with CORS requirements
-- Set Access-Control-Max-Age to 86400 seconds (24 hours) to optimize preflight caching
-- Ensured middleware passes through non-OPTIONS requests to their handlers
-- This middleware complements the existing CORS configuration in next.config.mjs
+### 14:45 - Added Direct Link to Manage Tokens from User Names in Admin Panel
 
-## 2024-07-12
+- Updated the user management page to redirect admins to the token management page when clicking on a user's name
+- Changed link destination from `/admin/users/${user.id}` to `/admin/users/${user.id}/tokens`
+- Improved admin workflow by providing a more direct path to token management
+- Maintained consistent styling with existing UI elements
+- Streamlined the admin experience by reducing clicks needed for token management
 
-### 10:45 - Added WordPress Admin Redirect After Successful Integration
+## 2024-07-22
 
-- Enhanced the WordPress integration flow with automatic redirect to plugin settings page
-- Modified both handleOptOut and handleWordPressIntegration functions to extract the base URL from redirectBack parameter
-- Added redirection to "/wp-admin/admin.php?page=waip-settings" after successful POST request
-- Updated toast notification message to inform users about the redirection
-- Improved user experience by automatically taking users to the plugin settings page
-- Used the window.location.href method to perform a proper 302 redirect
-- Maintained all existing functionality while adding the redirect capability
-- This eliminates the need for users to manually navigate to the plugin settings after integration
+### 15:30 - Implemented Global WordPress Integration Status Tracking
+
+- Created a new global context (WordPressIntegrationContext) to track WordPress plugin activation status
+- Modified the integration to persist status across user changes while the app is running
+- Updated WordPress activation page to use the global context instead of local state
+- Updated subscription page to set integration status during POST requests to WordPress
+- Added activation status check on app initialization to ensure consistent status display
+- Maintained app-level state that persists regardless of user changes or navigation
+- Enhanced user experience by showing consistent plugin status across different pages
+- Implemented proper page initialization to detect integration_status=success in URLs
+
+### 14:30 - Added WordPress Integration Status Tracking
+
+- Implemented a new local state to track WordPress plugin activation status
+- Added visual indicators showing "active" or "inactive" plugin status in the WordPress activation UI  
+- Created integration between login/signup forms and WordPress activation status tracking
+- Modified the subscription page to include integration status in redirect URLs
+- Added success parameter in WordPress admin redirect URLs to maintain activation state
+- Enhanced user experience by showing clear visual feedback about plugin activation status
+- Implemented proper callback pattern with onIntegrationSuccess prop to update activation status
+- Improved user feedback with green status badges when integration is successful
+
+## 2024-07-29
+
+### 11:45 - Fixed Google Authentication Token Preservation Issue
+
+- Fixed issue where activation_token and redirect_back values were being lost during Google authentication in LoginForm
+- Modified handleGoogleCredentialResponse function to explicitly store and pass activation parameters
+- Updated redirectToSubscription function to accept optional parameters for activation tokens
+- Improved the standard login form handler to also preserve activation tokens during authentication
+- Enhanced parameter handling to use local variables to prevent value loss during asynchronous operations
+- Added more robust fallback values when tokens are null or undefined
+- Ensured consistent behavior between standard login and Google authentication flows
+- Fixed the root cause of missing activation parameters in the subscription page redirect
+
+## 2024-07-30
+
+### 15:15 - Removed WordPress Plugin Status Visual Indicators from Activation Pages
+
+- Removed visual indicators of WordPress plugin activation status from activation pages
+- Maintained the integration status tracking functionality in the global context
+- Adjusted UI to no longer display "active" status on the WordPress activation and subscription pages
+- Reserved plugin status display for the admin user management interface only
+- Ensured the plugin integration status is still properly updated when integration occurs
+- Enhanced the admin-only nature of the plugin status display
+- Streamlined user interface by removing extraneous status indicators
+- Kept the underlying activation mechanism working despite removing visual indicators

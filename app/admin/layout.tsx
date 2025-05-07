@@ -43,11 +43,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   const menuItems = [
-    {
-      name: "Dashboard",
-      href: "/admin",
-      icon: BarChart3,
-    },
+    // {
+    //   name: "Dashboard",
+    //   href: "/admin",
+    //   icon: BarChart3,
+    // },
     {
       name: "User Management",
       href: "/admin/users",

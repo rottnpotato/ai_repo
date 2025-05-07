@@ -8,12 +8,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { AlertCircle, Loader2, Sparkles } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Logo } from "@/components/logo"
+import { UseWordPressIntegration } from "@/contexts/WordPressIntegrationContext"
 import Image from "next/image"
 
 // Create a client component that uses useSearchParams
 function WordPressActivationPageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { SetIntegrationActive } = UseWordPressIntegration()
   
   const [activationToken, setActivationToken] = useState<string | null>(null)
   const [redirectBack, setRedirectBack] = useState<string | null>(null)
@@ -25,6 +27,7 @@ function WordPressActivationPageContent() {
     // Extract query parameters
     const token = searchParams.get("activation_token")
     const redirect = searchParams.get("redirect_back")
+    const status = searchParams.get("integration_status")
     
     if (!token) {
       setError("Missing activation token")
@@ -33,7 +36,12 @@ function WordPressActivationPageContent() {
     
     setActivationToken(token)
     setRedirectBack(redirect)
-  }, [searchParams])
+    
+    // Check if returning with successful integration
+    if (status === "success") {
+      SetIntegrationActive()
+    }
+  }, [searchParams, SetIntegrationActive])
 
   // Render error state
   if (error) {
@@ -78,7 +86,7 @@ function WordPressActivationPageContent() {
               <p className="text-gray-600 max-w-sm">
                 Seamlessly integrate your WordPress site with our powerful AI assistant to enhance your content creation workflow.
               </p>
-              <div className="flex items-center justify-center space-x-2">
+              <div className="flex items-center justify-center space-x-2 mt-4">
                 <div className="w-3 h-3 bg-orange-400 rounded-full"></div>
                 <div className="w-2 h-2 bg-red-300 rounded-full"></div>
                 <div className="w-3 h-3 bg-amber-300 rounded-full"></div>
@@ -107,7 +115,7 @@ function WordPressActivationPageContent() {
                 <TabsContent value="login">
                   <LoginForm 
                     activationToken={activationToken} 
-                    redirectBack={redirectBack} 
+                    redirectBack={redirectBack}
                   />
                 </TabsContent>
                 <TabsContent value="signup">

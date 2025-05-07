@@ -77,7 +77,7 @@ export default function LoginPage() {
       
       // Redirect to the appropriate page based on user role
       if (isUserAdmin) {
-        router.replace("/admin");
+        router.replace("/admin/users");
       } else {
         router.replace("/dashboard");
       }
@@ -268,7 +268,7 @@ export default function LoginPage() {
         
         // Redirect based on role, using replace to handle navigation history properly
         if (isUserAdmin) {
-          router.replace("/admin");
+          router.replace("/admin/users");
         } else {
           router.replace("/dashboard");
         }
@@ -321,7 +321,7 @@ export default function LoginPage() {
         
         // Redirect based on role, using replace to handle navigation history properly
         if (isUserAdmin) {
-          router.replace("/admin");
+          router.replace("/admin/users");
         } else {
           router.replace("/dashboard");
         }

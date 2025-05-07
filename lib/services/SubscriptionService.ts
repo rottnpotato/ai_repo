@@ -199,16 +199,19 @@ export class SubscriptionService {
         throw new ApiError(400, 'Invalid subscription purchase request');
       }
       
-      const data = await Api.post<UserSubscription>(`${this.BASE_ENDPOINT}/purchase`, request);
+      const response = await Api.post<{ sessionId: string; url: string }>('/api/stripe/create-checkout', request);
       
-      if (!isValidUserSubscription(data)) {
-        console.error('[SubscriptionService] Invalid subscription data received after purchase:', data);
-        throw new ApiError(500, 'Invalid subscription data received from server after purchase');
+      if (!response || !response.url) {
+        throw new ApiError(500, 'Invalid response from checkout session creation');
       }
       
-      return data;
+      // Redirect to Stripe Checkout
+      window.location.href = response.url;
+      
+      // Return a promise that never resolves since we're redirecting
+      return new Promise(() => {});
     } catch (error) {
-      console.error('[SubscriptionService] Error purchasing subscription:', error);
+      console.error('[SubscriptionService] Error creating checkout session:', error);
       throw error;
     }
   }

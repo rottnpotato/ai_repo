@@ -161,20 +161,23 @@ export default function SubscriptionPage() {
       AutoRenew: autoRenew
     }
     
-    const result = await PurchaseSubscription(request)
-    
-    if (result) {
+    try {
+      // Call the PurchaseSubscription function with payment details
+      await PurchaseSubscription(request)
+      
+      // The PurchaseSubscription function will redirect to Stripe checkout
+      // The browser will be redirected to the Stripe URL
+      // User will complete payment on Stripe's hosted checkout page
+      
+      // When the user returns from Stripe, they'll be redirected based on success/failure
+      
+      // Close dialog and reset state (this code won't execute due to redirect)
       setShowConfirmPurchaseDialog(false)
       setSelectedPlan(null)
-      
-      toast({
-        title: "Subscription Successful",
-        description: `You've successfully subscribed to the ${result.SubscriptionPlan?.Name} plan.`,
-      })
-    } else if (purchaseError) {
+    } catch (error) {
       toast({
         title: "Subscription Failed",
-        description: purchaseError.message || "There was an error processing your subscription.",
+        description: error instanceof Error ? error.message : "There was an error processing your subscription.",
         variant: "destructive"
       })
     }

@@ -46,12 +46,18 @@ import {
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
-import { SubscriptionService } from "@/lib/services/SubscriptionService"
+import { SubscriptionService, UserSubscription } from "@/lib/services/SubscriptionService"
 import { AdminService } from "@/lib/services/AdminService"
 
+// Interface to track user subscriptions
+interface UserWithSubscription extends User {
+  userSubscriptions?: UserSubscription[];
+  activeSubscription?: UserSubscription;
+}
+
 export default function UsersPage() {
-  const [users, setUsers] = useState<User[]>([])
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<UserWithSubscription[]>([])
+  const [filteredUsers, setFilteredUsers] = useState<UserWithSubscription[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [planFilter, setPlanFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
@@ -59,7 +65,7 @@ export default function UsersPage() {
   const [sortDirection, setSortDirection] = useState("asc")
   const [isLoading, setIsLoading] = useState(true)
   const [isAddingTokens, setIsAddingTokens] = useState(false)
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [selectedUser, setSelectedUser] = useState<UserWithSubscription | null>(null)
   const [tokenAmount, setTokenAmount] = useState<number>(100)
   const [tokenNote, setTokenNote] = useState<string>("")
   const { toast } = useToast()
@@ -79,6 +85,9 @@ export default function UsersPage() {
           
           setUsers(mappedUsers);
           setFilteredUsers(mappedUsers);
+          
+          // Fetch subscription data for each user
+          fetchUserSubscriptions(mappedUsers);
         } else {
           console.error("Error fetching users: Invalid response format", response);
           toast({
@@ -101,10 +110,112 @@ export default function UsersPage() {
 
     fetchUsers();
   }, [toast]);
+  
+  // Fetch subscription data for each user
+  const fetchUserSubscriptions = async (userList: UserWithSubscription[]) => {
+    const updatedUsers: UserWithSubscription[] = [...userList];
+    
+    for (const user of updatedUsers) {
+      if (user.role !== "admin") {
+        try {
+          const subscriptions = await SubscriptionService.GetUserSubscriptions(user.id);
+          
+          if (Array.isArray(subscriptions) && subscriptions.length > 0) {
+            // Add subscriptions to user object
+            user.userSubscriptions = subscriptions;
+            
+            // Find active subscription
+            const activeSubscription = subscriptions.find(sub => 
+              sub.Status.toLowerCase() === "active"
+            );
+            
+            if (activeSubscription) {
+              user.activeSubscription = activeSubscription;
+              
+              // Update user plan based on subscription
+              if (activeSubscription.SubscriptionPlan) {
+                user.plan = activeSubscription.SubscriptionPlan.Name;
+              }
+              
+              // Update tokens used/remaining
+              user.tokensUsed = activeSubscription.TokensUsed;
+              user.subscriptionStatus = "active";
+            } else {
+              user.subscriptionStatus = "inactive";
+            }
+          } else {
+            user.subscriptionStatus = "inactive";
+          }
+        } catch (error) {
+          console.error(`Error fetching subscriptions for user ${user.id}:`, error);
+          // Continue to next user despite error
+        }
+      }
+    }
+    
+    setUsers(updatedUsers);
+    
+    // Update filtered users based on the current filters
+    let result = [...updatedUsers];
+    
+    // Filter out admin users
+    result = result.filter((user) => user.role !== "admin");
+    
+    // Apply other filters (copied from the filter useEffect)
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (user) =>
+          user.name.toLowerCase().includes(query) ||
+          user.email.toLowerCase().includes(query) ||
+          (user.company && user.company.toLowerCase().includes(query))
+      );
+    }
+    
+    if (planFilter !== "all") {
+      result = result.filter((user) => user.plan === planFilter);
+    }
+    
+    if (statusFilter !== "all") {
+      result = result.filter((user) => user.subscriptionStatus === statusFilter);
+    }
+    
+    // Apply sorting
+    result.sort((a, b) => {
+      let compareResult = 0;
+      
+      switch (sortBy) {
+        case "name":
+          compareResult = a.name.localeCompare(b.name);
+          break;
+        case "email":
+          compareResult = a.email.localeCompare(b.email);
+          break;
+        case "plan":
+          compareResult = a.plan.localeCompare(b.plan);
+          break;
+        case "status":
+          compareResult = a.subscriptionStatus.localeCompare(b.subscriptionStatus);
+          break;
+        case "date":
+          compareResult = new Date(a.subscriptionStartDate).getTime() - new Date(b.subscriptionStartDate).getTime();
+          break;
+        default:
+          compareResult = 0;
+      }
+      
+      return sortDirection === "asc" ? compareResult : -compareResult;
+    });
+    
+    setFilteredUsers(result);
+  };
 
   // Filter and sort users based on search query, filters, and sort options
   useEffect(() => {
     let result = [...users]
+
+    // Filter out admin users
+    result = result.filter((user) => user.role !== "admin")
 
     // Apply search query
     if (searchQuery) {
@@ -218,10 +329,10 @@ export default function UsersPage() {
           <h1 className="text-3xl font-bold">User Management</h1>
           <p className="text-gray-500 mt-1">Manage and monitor all users in your system</p>
         </div>
-        <Button className="gap-2">
+        {/* <Button className="gap-2">
           <PlusCircle className="h-4 w-4" />
           Add New User
-        </Button>
+        </Button> */}
       </div>
 
       <Card className="mb-8">
@@ -281,14 +392,14 @@ export default function UsersPage() {
           <div className="flex justify-between items-center">
             <CardTitle>Users</CardTitle>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="gap-1">
+              {/* <Button variant="outline" size="sm" className="gap-1">
                 <Download className="h-4 w-4" />
                 Export
               </Button>
               <Button variant="outline" size="sm" className="gap-1">
                 <Filter className="h-4 w-4" />
                 More Filters
-              </Button>
+              </Button> */}
             </div>
           </div>
         </CardHeader>
@@ -329,7 +440,7 @@ export default function UsersPage() {
                       className="flex items-center gap-1 hover:text-orange-600 transition-colors"
                       onClick={() => handleSort("status")}
                     >
-                      Status
+                      Plugin Activation
                       <ArrowUpDown className="h-3.5 w-3.5" />
                     </button>
                   </th>
@@ -339,7 +450,7 @@ export default function UsersPage() {
                       className="flex items-center gap-1 hover:text-orange-600 transition-colors"
                       onClick={() => handleSort("date")}
                     >
-                      Join Date
+                      Token Used & Plan
                       <ArrowUpDown className="h-3.5 w-3.5" />
                     </button>
                   </th>
@@ -350,33 +461,46 @@ export default function UsersPage() {
                 {filteredUsers.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50">
                     <td className="py-3 px-4 font-medium">
-                      <Link href={`/admin/users/${user.id}`} className="hover:text-orange-600 transition-colors">
+                      <Link href={`/admin/users/${user.id}/tokens`} className="hover:text-orange-600 transition-colors">
                         {user.name}
                       </Link>
                     </td>
                     <td className="py-3 px-4">{user.email}</td>
-                    <td className="py-3 px-4 capitalize">{user.plan}</td>
+                    <td className="py-3 px-4 capitalize">
+                      {user.activeSubscription ? 
+                        (user.activeSubscription.SubscriptionPlan?.Name || user.plan || "Free") : 
+                        "No Active Subscription"}
+                    </td>
                     <td className="py-3 px-4">
                       <Badge
                         variant="outline"
                         className={`
                         ${
-                          user.subscriptionStatus === "active"
+                          user.pluginActivation === "active"
                             ? "border-green-200 bg-green-50 text-green-700"
-                            : user.subscriptionStatus === "trial"
-                            ? "border-blue-200 bg-blue-50 text-blue-700"
-                            : user.subscriptionStatus === "past_due"
+                            : user.pluginActivation === "inactive"
                             ? "border-red-200 bg-red-50 text-red-700"
                             : "border-gray-200 bg-gray-50 text-gray-700"
                         }
                       `}
                       >
-                        {user.subscriptionStatus === "past_due" ? "Past Due" : user.subscriptionStatus}
+                        {user.pluginActivation || "Inactive"}
                       </Badge>
                     </td>
                     <td className="py-3 px-4">{user.company || "—"}</td>
                     <td className="py-3 px-4">
-                      {new Date(user.subscriptionStartDate).toLocaleDateString()}
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium">
+                          {user.activeSubscription ? 
+                            `${user.activeSubscription.TokensUsed || 0} / ${user.activeSubscription.SubscriptionPlan?.MaxTokens || 0} tokens` : 
+                            `${user.tokensUsed || 0} tokens used`}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {user.activeSubscription ? 
+                            `Plan: ${user.activeSubscription.SubscriptionPlan?.Name || user.plan || "Free"}` : 
+                            "No Active Subscription"}
+                        </span>
+                      </div>
                     </td>
                     <td className="py-3 px-4 text-right">
                       <DropdownMenu>

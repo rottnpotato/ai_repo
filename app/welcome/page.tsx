@@ -112,13 +112,11 @@ export default function WelcomePage() {
       
       const result = await PurchaseSubscription(request)
       
-      if (result) {
-        toast({
-          title: plan.trial ? "Trial Started" : "Subscription Successful",
-          description: `You've successfully ${plan.trial ? "started a trial of" : "subscribed to"} the ${result.SubscriptionPlan?.Name} plan.`,
-        })
-        router.push("/dashboard")
-      }
+      // The PurchaseSubscription function internally handles the redirect to Stripe
+      // It redirects the browser to the Stripe checkout URL
+      
+      // The success/error handling will happen after redirect back from Stripe
+      
     } catch (error) {
       console.error("Subscription error:", error)
       toast({

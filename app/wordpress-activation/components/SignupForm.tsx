@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
 import { UseWordPressAuth } from "@/contexts/WordPressAuthContext"
+import { UseWordPressIntegration } from "@/contexts/WordPressIntegrationContext"
 import { useToast } from "@/hooks/use-toast"
 import Script from "next/script"
 
@@ -64,6 +65,7 @@ export function SignupForm({ activationToken, redirectBack }: SignupFormProps) {
   const [ignoreContextError, setIgnoreContextError] = useState(false)
   
   const { SignupForWordPress, GoogleSignupForWordPress, isLoading, error, ClearError } = UseWordPressAuth()
+  const { SetIntegrationActive } = UseWordPressIntegration()
   const { toast } = useToast()
   const router = useRouter()
   const googleButtonRef = useRef<HTMLDivElement>(null);
@@ -444,18 +446,34 @@ export function SignupForm({ activationToken, redirectBack }: SignupFormProps) {
     }
   }
 
-  const redirectToSubscription = (accessToken: string) => {
-    if (!activationToken || !redirectBack) {
+  const redirectToSubscription = (accessToken: string | undefined) => {
+    // Validate that accessToken exists
+    if (!accessToken) {
+      console.error("[WP-Auth] Missing access token for redirect");
       toast({
-        title: "Missing Information",
-        description: "Required WordPress integration parameters are missing",
+        title: "Authentication Error",
+        description: "Missing authentication token. Please try again.",
         variant: "destructive"
       });
       return;
     }
     
+    // Use empty strings as fallbacks if activationToken or redirectBack are null
+    const token = activationToken || '';
+    const redirect = redirectBack || '';
+    
+    // Log for debugging purposes
+    console.log("[WP-Auth] Redirecting with params:", { 
+      activationToken: token, 
+      redirectBack: redirect,
+      accessToken 
+    });
+    
+    // Set WordPress integration status as active in the global context
+    SetIntegrationActive();
+    
     // Navigate to the subscription page with the necessary tokens
-    router.push(`/wordpress-activation/subscription?activation_token=${encodeURIComponent(activationToken)}&redirect_back=${encodeURIComponent(redirectBack)}&access_token=${encodeURIComponent(accessToken)}`);
+    router.push(`/wordpress-activation/subscription?activation_token=${encodeURIComponent(token)}&redirect_back=${encodeURIComponent(redirect)}&access_token=${encodeURIComponent(accessToken)}`);
   };
 
   const togglePasswordVisibility = () => {

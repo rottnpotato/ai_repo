@@ -72,22 +72,15 @@ export default function PlanSelectionPage() {
       AutoRenew: autoRenew
     }
     
-    const result = await PurchaseSubscription(request)
-    
-    if (result) {
+    try {
+      await PurchaseSubscription(request)
+      // Note: The function will never reach this point as it redirects to Stripe
+      // The success/error handling will happen after redirect back from Stripe
       setSelectedPlan(null)
-      
-      toast({
-        title: "Subscription Successful",
-        description: `You've successfully subscribed to the ${result.SubscriptionPlan?.Name} plan.`,
-      })
-
-      // Redirect to dashboard after successful subscription
-      router.push("/dashboard")
-    } else if (purchaseError) {
+    } catch (error) {
       toast({
         title: "Subscription Failed",
-        description: purchaseError.message || "There was an error processing your subscription.",
+        description: error instanceof Error ? error.message : "There was an error processing your subscription.",
         variant: "destructive"
       })
     }

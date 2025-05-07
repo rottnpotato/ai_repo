@@ -24,6 +24,8 @@ export type User = {
   firstName?: string; // Added for new API
   lastName?: string; // Added for new API
   status?: string; // Added for new API
+  pluginActivation?: string; // Added for plugin activation status
+  tokensUsed?: number; // Added for token usage tracking
 };
 
 export type UserStats = {
@@ -135,7 +137,9 @@ const apiUserToUIUser = (apiUser: any): User => {
       subscriptionStartDate: new Date().toISOString(),
       apiKey: 'sk_test_' + Math.random().toString(36).substring(2, 15),
       role: userRole,
-      status: apiUser.status || "active"
+      status: apiUser.status || "active",
+      pluginActivation: apiUser.pluginActivation || "",
+      tokensUsed: apiUser.tokensUsed || 0
     };
   } catch (error) {
     console.error("Error converting API user to UI user:", error);

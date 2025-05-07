@@ -52,14 +52,17 @@ export class AdminService {
       firstName: backendUser.FirstName,
       lastName: backendUser.LastName,
       fullName: `${backendUser.FirstName || ''} ${backendUser.LastName || ''}`.trim(),
-      plan: 'professional', // Default value since backend doesn't provide plan info directly
-      subscriptionStatus: backendUser.Status || 'inactive',
-      nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-      billingCycle: 'monthly',
-      subscriptionStartDate: backendUser.CreatedAt,
-      apiKey: 'sk_test_' + Math.random().toString(36).substring(2, 15),
+      plan: backendUser.Plan || backendUser.SubscriptionPlan || 'Free', // Get actual plan from backend
+      subscriptionStatus: backendUser.SubscriptionStatus || backendUser.Status || 'inactive',
+      nextBillingDate: backendUser.NextBillingDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      billingCycle: backendUser.BillingCycle || 'monthly',
+      subscriptionStartDate: backendUser.SubscriptionStartDate || backendUser.CreatedAt,
+      apiKey: backendUser.ApiKey || 'sk_test_' + Math.random().toString(36).substring(2, 15),
       role: backendUser.Role || 'user',
-      status: backendUser.Status || 'inactive'
+      status: backendUser.Status || 'inactive',
+      pluginActivation: backendUser.PluginActivation || 'inactive',
+      tokensUsed: backendUser.TokensUsed || 0,
+      company: backendUser.Company || ''
     };
   }
 }

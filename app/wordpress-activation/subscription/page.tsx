@@ -17,6 +17,7 @@ import { Logo } from "@/components/logo"
 import { useToast } from "@/hooks/use-toast"
 import { UseSubscription } from "@/hooks/useSubscription"
 import { SubscriptionService } from "@/lib/services/SubscriptionService"
+import { UseWordPressIntegration } from "@/contexts/WordPressIntegrationContext"
 import Image from "next/image"
 
 // SearchParams provider component that wraps useSearchParams hook
@@ -65,6 +66,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
     FetchSubscription
   } = UseSubscription()
   const { toast } = useToast()
+  const { SetIntegrationActive } = UseWordPressIntegration()
   
   // Combine related state variables into a single object to prevent multiple re-renders
   const [integrationParams, setIntegrationParams] = useState({
@@ -192,9 +194,13 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
         throw new Error(`Error ${response.status}: ${response.statusText}`)
       }
       
+      // Set integration status to active in our global context
+      SetIntegrationActive()
+      
       // Extract base URL from redirectBack
       const baseUrl = new URL(redirectBack).origin
-      const wordpressAdminUrl = `${baseUrl}/wp-admin/admin.php?page=waip-settings`
+      // Update URL to include integration status
+      const wordpressAdminUrl = `${baseUrl}/wp-admin/admin.php?page=waip-settings&integration_status=success`
       
       // Show success message after POST completes successfully
       toast({
@@ -254,9 +260,13 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
         throw new Error(`Error ${response.status}: ${response.statusText}`)
       }
       
+      // Set integration status to active in our global context
+      SetIntegrationActive()
+      
       // Extract base URL from redirectBack
       const baseUrl = new URL(redirectBack).origin
-      const wordpressAdminUrl = `${baseUrl}/wp-admin/admin.php?page=waip-settings`
+      // Update URL to include integration status
+      const wordpressAdminUrl = `${baseUrl}/wp-admin/admin.php?page=waip-settings&integration_status=success`
       
       // Show success message after POST completes successfully
       toast({
@@ -296,21 +306,24 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
     }
     
     try {
-      const result = await PurchaseSubscription({
+      // Call the PurchaseSubscription function with required parameters
+      await PurchaseSubscription({
         SubscriptionPlanId: planId,
-        PaymentMethod: "credit_card",
-        AutoRenew: true
+        PaymentMethod: "credit_card", // Default payment method
+        AutoRenew: true // Default to auto-renew
       })
       
-      if (result) {
-        // Set the selected plan
-        updateUiState({ selectedPlan: planId })
-        
-        toast({
-          title: "Subscription Successful",
-          description: `You've successfully subscribed to the ${result.SubscriptionPlan?.Name} plan. Click "Complete Integration" to connect with WordPress.`,
-        })
-      }
+      // The PurchaseSubscription function internally handles the redirect to Stripe
+      // It redirects the browser to the Stripe checkout URL
+      
+      // Update UI state to indicate selected plan
+      updateUiState({ selectedPlan: planId })
+      
+      // Show toast message about redirection
+      toast({
+        title: "Redirecting to Stripe",
+        description: "You will be redirected to complete your subscription.",
+      })
     } catch (err) {
       console.error("Subscription error:", err)
       updateUiState({ error: err instanceof Error ? err.message : "An unexpected error occurred" })

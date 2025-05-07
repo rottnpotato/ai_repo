@@ -32,6 +32,8 @@ export const mockUsers: User[] = [
     apiKey: "sk_test_WooProductsAI_12345678901234567890",
     apiKeyLastUsed: "2023-11-10T14:30:00Z",
     role: "user",
+    pluginActivation: "active",
+    tokensUsed: 15000
   },
   {
     id: "user_2",
@@ -47,6 +49,8 @@ export const mockUsers: User[] = [
     apiKey: "sk_test_WooProductsAI_09876543210987654321",
     apiKeyLastUsed: "2023-11-22T09:15:00Z",
     role: "user",
+    pluginActivation: "inactive",
+    tokensUsed: 5000
   },
   {
     id: "user_3",
@@ -59,6 +63,8 @@ export const mockUsers: User[] = [
     subscriptionStartDate: "2023-11-21",
     apiKey: "sk_test_WooProductsAI_abcdefghijklmnopqrst",
     role: "user",
+    pluginActivation: "active",
+    tokensUsed: 1000
   },
   {
     id: "user_4",
@@ -74,6 +80,8 @@ export const mockUsers: User[] = [
     apiKey: "sk_test_WooProductsAI_zyxwvutsrqponmlkjih",
     apiKeyLastUsed: "2023-10-30T17:45:00Z",
     role: "user",
+    pluginActivation: "inactive",
+    tokensUsed: 8000
   },
   {
     id: "user_5",

@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext"
 import { Toaster } from "@/components/ui/toaster"
 import { SessionProvider } from "next-auth/react"
 import Head from "next/head"
+import { WordPressIntegrationProvider } from "@/contexts/WordPressIntegrationContext"
 
 const figtree = Figtree({ subsets: ["latin"] })
 
@@ -18,6 +19,10 @@ const figtree = Figtree({ subsets: ["latin"] })
  * - Primary authentication is handled through our AuthProvider (contexts/AuthContext.tsx)
  * - NextAuth SessionProvider is included for compatibility during the transition
  * - With static exports, API routes requiring server functionality won't be available
+ * 
+ * WordPress Integration:
+ * - WordPressIntegrationProvider maintains integration status at the app level
+ * - Status persists across user changes while the app is running
  */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -31,8 +36,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             {/* Main authentication is now handled by AuthProvider with NestJS backend */}
             <AuthProvider>
-              <main className="min-h-screen bg-background">{children}</main>
-              <Toaster />
+              <WordPressIntegrationProvider>
+                <main className="min-h-screen bg-background">{children}</main>
+                <Toaster />
+              </WordPressIntegrationProvider>
             </AuthProvider>
           </ThemeProvider>
         </SessionProvider>
