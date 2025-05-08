@@ -57,10 +57,10 @@ export const UserDropdown: FC<UserDropdownProps> = ({ children, userName }) => {
             <CreditCard className="mr-2 h-4 w-4" />
             <span>Subscription</span>
           </DropdownMenuItem>
-          {/* <DropdownMenuItem onClick={() => router.push("/settings")}>
+          <DropdownMenuItem onClick={() => router.push("/dashboard/settings")}>
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
-          </DropdownMenuItem> */}
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={HandleLogout}>

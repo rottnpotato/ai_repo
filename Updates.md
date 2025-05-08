@@ -1,5 +1,148 @@
 # Updates Log
 
+## 2024-07-24
+
+### 10:45 - Reorganized Settings Page Structure
+
+- Reorganized AI API Configuration tab to include both Content Generation and Content Moderation sections
+- Removed Rate Limiting section from settings page
+- Maintained Advanced tab with system instructions and temperature settings
+- Updated ApiSettings type to include moderation-related properties
+- Added default values for moderation settings in the configuration
+
+### 10:30 - Updated Settings Page Structure and Configuration
+
+- Removed Rate Limiting section from settings page
+- Reorganized AI API Configuration into Content Generation section
+- Added Content Moderation section with AI provider selection and API key configuration
+- Updated ApiSettings type to include moderation-related properties
+- Added default values for moderation settings in the configuration
+
+### 11:30 - Added Real-time Token Usage Monitoring Page
+
+- Created new token usage monitoring page at `/admin/token-usage`
+- Implemented real-time token usage tracking with 4-second auto-refresh
+- Added comprehensive token usage metrics:
+  - Total tokens used across all users
+  - Total cost in USD
+  - Average cost per 1000 tokens
+- Created detailed user-level token usage table with:
+  - Individual token usage
+  - Cost per user
+  - Usage trends
+  - Last usage timestamp
+- Added loading states with skeleton placeholders
+- Integrated with admin navigation menu
+- Maintained consistent design with existing admin pages
+
+## 2025-05-08
+
+### 14:30 - Updated Admin Settings Page Design
+- Redesigned settings page to match admin design pattern
+- Added consistent header and card styling
+- Improved form layout and spacing
+- Added proper TypeScript types for API settings
+- Added system instructions and temperature controls
+- Fixed all TypeScript errors and improved type safety
+
+### 14:00 - Integrated Real API Data for Token Usage Page
+
+- Replaced mock data in `/admin/token-usage` with real API calls via AdminService and SubscriptionService
+- Aggregated tokens used across all user subscriptions for accurate total usage
+- Calculated equivalent cost based on subscription plan price and token limits
+- Implemented trend calculation comparing current usage to previous fetch
+- Continued 4-second auto-refresh for real-time updates
+
+## 2024-07-23
+
+### 14:30 - Implemented Consistent Design for Settings Pages
+
+- Updated all settings pages to match the subscription and dashboard pages design 
+- Replaced flat red colors with orange-red gradients across all pages
+- Enhanced visual consistency with glass-morphism effects (backdrop blur)
+- Improved UI components with gradient backgrounds, shadows, and subtle animations
+- Updated buttons with hover and active states for better interactivity
+- Added consistent focus states to all form inputs
+- Standardized card styling with transparent borders and hover effects
+- Improved tab navigation styling with gradient active states
+
+### 13:15 - Improved Settings Pages Organization and Accessibility
+
+- Reorganized settings pages with a clear separation between user and admin settings
+- Moved API settings from user dashboard to admin section for better security
+- Created admin-specific API settings page at `/admin/settings/api-settings`
+- Added multiple ways to access settings pages for improved user experience:
+  - Added Settings card to dashboard's Quick Actions
+  - Enabled Settings option in user dropdown menu
+  - Maintained Settings link in dashboard header
+- Updated admin sidebar to properly highlight Settings navigation link
+- Implemented consistent navigation between settings pages
+- Added admin access check to restrict sensitive settings
+
+## 2024-07-23
+
+### 13:15 - Improved Settings Pages Organization and Accessibility
+
+- Reorganized settings pages with a clear separation between user and admin settings
+- Moved API settings from user dashboard to admin section for better security
+- Created admin-specific API settings page at `/admin/settings/api-settings`
+- Added multiple ways to access settings pages for improved user experience:
+  - Added Settings card to dashboard's Quick Actions
+  - Enabled Settings option in user dropdown menu
+  - Maintained Settings link in dashboard header
+- Updated admin sidebar to properly highlight Settings navigation link
+- Implemented consistent navigation between settings pages
+- Added admin access check to API settings to restrict access to admin users only
+- Enhanced design consistency across all settings pages
+- Improved UI by using consistent orange/red gradient styling
+
+## 2024-07-19
+
+### 15:30 - Implemented Stripe Webhook Handler
+
+- Created webhook route handler at `/api/stripe/webhook/route.ts`
+- Implemented the webhook endpoint to process events from the backend API
+- Added proper verification for the stripe-signature header
+- Implemented handlers for different webhook event types:
+  - checkout.session.completed
+  - customer.subscription.created
+  - customer.subscription.updated
+  - customer.subscription.deleted
+  - invoice.payment_succeeded
+  - invoice.payment_failed
+- Added comprehensive error handling and logging
+- Structured the code to allow easy extension for additional event types
+- Completed the missing implementation identified earlier in the day
+
+### 14:45 - Identified Missing Stripe Webhook Implementation
+
+- Discovered that the Stripe webhook implementation is missing from the codebase
+- Found a webhook endpoint defined in the API documentation at `/api/stripe/webhook` but not implemented
+- API documentation specifies webhook functionality for handling payment confirmations, failures, and subscription updates
+- Found empty webhook directory at `app/api/stripe/webhook/` without a route.ts implementation
+- Noted that while the checkout functionality is implemented, the webhook for handling Stripe events is missing
+- This is a critical component needed to properly process Stripe payment events
+
+### 16:45 - Implemented Role-Based Settings Access Control
+
+- Added proper role-based access control to settings pages
+- Restricted API settings page to admin users only
+- Updated all settings pages to use consistent navigation sidebar
+- Added conditional rendering of API settings link based on user role
+- Fixed sidebar implementation to use proper components and navigation
+- Added clear error pages for unauthorized access to admin-only pages
+- Implemented consistent design across all settings sections
+- Improved UI by using a unified settings navigation pattern
+- Enhanced security by preventing non-admin users from accessing API configuration
+
+### 18:30 - Enhanced Settings Accessibility
+
+- Added a Settings card to the dashboard's Quick Actions section for easy access to settings pages
+- Enabled the Settings option in the user dropdown menu
+- Ensured proper routing from multiple entry points to the settings pages
+- Made the Settings card visually distinct with purple styling
+- Improved overall navigation flow between dashboard and settings
+
 ## 2024-07-18
 
 ### 16:30 - Enhanced Admin User Management Display
@@ -1239,3 +1382,51 @@
 - Enhanced the admin-only nature of the plugin status display
 - Streamlined user interface by removing extraneous status indicators
 - Kept the underlying activation mechanism working despite removing visual indicators
+
+# Project Updates
+
+## Settings Pages Redesign - [Date: 06/05/2024]
+
+### API Settings Page Enhancements:
+- Reorganized content into tabbed sections (API Providers, Usage & Limits, Monitoring)
+- Added usage limits and monitoring configuration options
+- Implemented card-based layouts for better visual hierarchy
+- Added descriptive text and improved section labeling
+- Enhanced visual consistency with proper spacing and component alignment
+
+### Content Settings Page Improvements:
+- Restructured page into three logical sections (General, Language & Style, Advanced)
+- Implemented card-based layouts with descriptive headers
+- Added responsive grid layouts for form fields
+- Added advanced AI model configuration options
+- Improved input field organization and grouping
+
+### Prompts Settings Page Redesign:
+- Enhanced variables section with badges for easier insertion
+- Organized prompts by content type (Short Descriptions, Full Descriptions, Tags)
+- Added clear visual distinction between system and user prompts
+- Implemented tabbed interface for better organization
+- Added inline help text and clear labeling
+
+## Settings Pages Directory Structure and Bug Fixes - [Date: 06/05/2024]
+- Moved settings pages to their proper location under dashboard/settings/
+- Fixed sidebar implementation to use standard navigation links
+- Fixed component import patterns for consistent usage
+- Corrected navigation links between settings pages
+- Created a main settings index page with links to all settings sections
+- Updated motion animations for better visual transitions
+
+## 2024-03-26
+- Simplified content settings page by removing Language & Style and Advanced tabs
+- Kept only the General tab for essential content generation parameters
+- Improved focus on core functionality with cleaner interface
+- Enhanced layout of settings pages:
+  - Centered content and reduced maximum width for better readability
+  - Added centered headings and descriptions
+  - Improved spacing and alignment of all elements
+  - Made both content and prompts settings pages consistent in layout
+- Updated dashboard Quick Actions section:
+  - Replaced quick actions with direct links to Content and Prompt settings
+  - Changed section title to "Settings" for clarity
+  - Updated icons and descriptions to match settings focus
+  - Improved grid layout for better visual balance

@@ -15,6 +15,7 @@ import {
   CreditCard,
   Shield,
   Package,
+  Coins,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
@@ -53,6 +54,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       href: "/admin/users",
       icon: Users,
     },
+    {
+      name: "Token Usage",
+      href: "/admin/token-usage",
+      icon: Coins,
+    },
     // {
     //   name: "API Usage",
     //   href: "/admin/api-usage",
@@ -68,11 +74,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       href: "/admin/subscription-plans",
       icon: Package,
     },
-    // {
-    //   name: "Settings",
-    //   href: "/admin/settings",
-    //   icon: Settings,
-    // },
+    {
+      name: "Settings",
+      href: "/admin/settings",
+      icon: Settings,
+    },
     // {
     //   name: "Security",
     //   href: "/admin/security",

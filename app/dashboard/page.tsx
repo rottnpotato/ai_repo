@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { AlertTriangle, ArrowRight, CircleCheck, FileText, LogOut, Mail, ShoppingBag, User, Zap } from "lucide-react"
+import { AlertTriangle, ArrowRight, CircleCheck, FileText, LogOut, Mail, ShoppingBag, User, Zap, Settings, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
@@ -118,28 +118,20 @@ export default function DashboardPage() {
 
   const quickActions = [
     {
-      title: "Generate Product Description",
-      description: "Create compelling product descriptions with AI",
-      icon: ShoppingBag,
+      title: "Content Settings",
+      description: "Configure content generation parameters and limits",
+      icon: FileText,
       color: "bg-orange-100 text-orange-700",
       iconColor: "text-orange-500",
-      path: "/generate/product",
+      path: "/dashboard/settings/content",
     },
     {
-      title: "Write Blog Post",
-      description: "Generate engaging blog content for your store",
-      icon: FileText,
+      title: "Prompt Settings",
+      description: "Customize AI prompts for different content types",
+      icon: MessageSquare,
       color: "bg-red-100 text-red-700",
       iconColor: "text-red-500",
-      path: "/generate/blog",
-    },
-    {
-      title: "Create Marketing Email",
-      description: "Draft marketing emails that convert customers",
-      icon: Mail,
-      color: "bg-amber-100 text-amber-700",
-      iconColor: "text-amber-500",
-      path: "/generate/email",
+      path: "/dashboard/settings/prompts",
     },
   ]
 
@@ -325,14 +317,14 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-lg font-semibold flex items-center">
               <div className="mr-2 p-1.5 rounded-full bg-orange-100">
-                <ArrowRight className="h-4 w-4 text-orange-500" />
+                <Settings className="h-4 w-4 text-orange-500" />
               </div>
-              Quick Actions
+              Settings
             </CardTitle>
-            <CardDescription>Get started with AI-powered content generation for your WooCommerce store</CardDescription>
+            <CardDescription>Configure your AI content generation settings</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {quickActions.map((action, index) => (
                 <motion.div
                   key={index}
@@ -351,7 +343,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-orange-100 shadow-md mb-8">
+        {/* <Card className="border-orange-100 shadow-md mb-8">
           <CardHeader>
             <CardTitle className="text-lg font-semibold flex items-center">
               <div className="mr-2 p-1.5 rounded-full bg-orange-100">
@@ -384,7 +376,7 @@ export default function DashboardPage() {
               ))}
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
 
         {/* More dashboard content can go here */}
       </div>

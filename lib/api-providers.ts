@@ -8,12 +8,17 @@ export type ApiProvider = {
   apiKeyPlaceholder: string;
   baseUrl?: string;
   isActive: boolean;
+  models: { id: string; name: string }[];
 }
 
 // System-wide API settings
 export type ApiSettings = {
   currentProvider: string;
   providers: Record<string, ApiProviderSettings>;
+  moderationProvider?: string;
+  moderationApiKey?: string;
+  systemInstructions?: string;
+  temperature?: number;
 }
 
 export type ApiProviderSettings = {
@@ -32,6 +37,10 @@ export const apiProviders: ApiProvider[] = [
     apiKeyName: "API Key",
     apiKeyPlaceholder: "sk-xxxxxxxxxxxxxxxxxxxxxxxx",
     isActive: true,
+    models: [
+      { id: "gpt-3.5-turbo", name: "GPT-3.5 Turbo" },
+      { id: "gpt-4", name: "GPT-4" },
+    ],
   },
   {
     id: "anthropic",
@@ -41,6 +50,10 @@ export const apiProviders: ApiProvider[] = [
     apiKeyPlaceholder: "sk-ant-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     baseUrl: "https://api.anthropic.com/v1",
     isActive: false,
+    models: [
+      { id: "claude-2.1", name: "Claude 2.1" },
+      { id: "claude-3", name: "Claude 3" },
+    ],
   },
   {
     id: "google",
@@ -50,6 +63,10 @@ export const apiProviders: ApiProvider[] = [
     apiKeyPlaceholder: "AIzaSyXXXXXXXXXXXXXXXXXX",
     baseUrl: "https://generativelanguage.googleapis.com/v1",
     isActive: false,
+    models: [
+      { id: "gemini-pro", name: "Gemini Pro" },
+      { id: "gemini-ultra", name: "Gemini Ultra" },
+    ],
   },
   {
     id: "azure",
@@ -59,12 +76,17 @@ export const apiProviders: ApiProvider[] = [
     apiKeyPlaceholder: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     baseUrl: "https://your-resource-name.openai.azure.com",
     isActive: false,
+    models: [
+      { id: "gpt-4", name: "GPT-4" },
+    ],
   }
 ];
 
 // Mock default API settings
 export const defaultApiSettings: ApiSettings = {
   currentProvider: "openai",
+  moderationProvider: "openai",
+  moderationApiKey: "",
   providers: {
     openai: {
       apiKey: "",
