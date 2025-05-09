@@ -476,15 +476,13 @@ export default function UsersPage() {
                         variant="outline"
                         className={`
                         ${
-                          user.pluginActivation === "active"
+                          user.activeSubscription && user.activeSubscription.TokensUsed > 0
                             ? "border-green-200 bg-green-50 text-green-700"
-                            : user.pluginActivation === "inactive"
-                            ? "border-red-200 bg-red-50 text-red-700"
-                            : "border-gray-200 bg-gray-50 text-gray-700"
+                            : "border-red-200 bg-red-50 text-red-700"
                         }
                       `}
                       >
-                        {user.pluginActivation || "Inactive"}
+                        {user.activeSubscription && user.activeSubscription.TokensUsed > 0 ? "Active" : "Inactive"}
                       </Badge>
                     </td>
                     <td className="py-3 px-4">{user.company || "—"}</td>

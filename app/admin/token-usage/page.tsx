@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Skeleton } from "@/components/ui/skeleton"
 import { Coins, RefreshCw, TrendingUp, TrendingDown } from "lucide-react"
 import { AdminService } from "@/lib/services/AdminService"
-import { SubscriptionService } from "@/lib/services/SubscriptionService"
+import { SubscriptionService, UserSubscription } from "@/lib/services/SubscriptionService"
 
 interface TokenUsage {
   userId: string
@@ -14,6 +14,8 @@ interface TokenUsage {
   totalTokens: number
   costInUSD: number
   lastUsed: string
+  promptTokens: number
+  outputTokens: number
   trend: number // Percentage change
 }
 
@@ -23,11 +25,13 @@ export default function TokenUsagePage() {
   const [totalCost, setTotalCost] = useState(0)
   const [totalTokens, setTotalTokens] = useState(0)
   const prevUsageRef = useRef<Record<string, number>>({})
+  const [userSubscriptions, setUserSubscriptions] = useState<UserSubscription[]>([])
 
   const fetchTokenUsage = async () => {
     setIsLoading(true)
     try {
       const userResponse = await AdminService.GetAllUsers()
+      console.log(userResponse)
       if (!userResponse.success) throw new Error("Failed to fetch users")
       // Map backend users to frontend User format to get correct id and name
       const users = userResponse.users.map((backendUser) =>
@@ -36,10 +40,19 @@ export default function TokenUsagePage() {
       const usageData: TokenUsage[] = await Promise.all(
         users.map(async (u) => {
           const subs = await SubscriptionService.GetUserSubscriptions(u.id)
+       
+         
+          //const sub = await SubscriptionService.GetSubscriptionById(subs[0].Id);
+          // console.log(subs)
           const total = subs.reduce((sum, sub) => sum + sub.TokensUsed, 0)
+      
+          
+          
           // Calculate cost using 30% input tokens at $0.10 per 1M, 70% output tokens at $0.40 per 1M
-          const inputTokens = total * 0.3
-          const outputTokens = total * 0.7
+          const inputTokens = total * 0.4
+          const outputTokens = total * 0.6
+          // const inputTokens = sub.PromptTokenUsed;
+          // const outputTokens = sub.CandidateTokenUsed;
           const inputRate = 0.10  // USD per 1M tokens
           const outputRate = 0.40 // USD per 1M tokens
           const cost = (inputTokens / 1_000_000) * inputRate + (outputTokens / 1_000_000) * outputRate
@@ -56,6 +69,8 @@ export default function TokenUsagePage() {
             totalTokens: total,
             costInUSD: cost,
             lastUsed: lastDate.toISOString(),
+            promptTokens: inputTokens,
+            outputTokens: outputTokens,
             trend: 0,
           }
         })
@@ -154,6 +169,8 @@ export default function TokenUsagePage() {
               <TableRow>
                 <TableHead>User</TableHead>
                 <TableHead className="text-right">Tokens Used</TableHead>
+                <TableHead className="text-right">Input Tokens</TableHead>
+                <TableHead className="text-right">Output Tokens</TableHead>
                 <TableHead className="text-right">Cost (USD)</TableHead>
                 <TableHead className="text-right">Last Used</TableHead>
                 <TableHead className="text-right">Trend</TableHead>
@@ -174,8 +191,12 @@ export default function TokenUsagePage() {
                 tokenUsage.map((usage) => (
                   <TableRow key={usage.userId}>
                     <TableCell className="font-medium">{usage.userName}</TableCell>
-                    <TableCell className="text-right">{usage.totalTokens.toLocaleString()}</TableCell>
-                    <TableCell className="text-right">${usage.costInUSD.toFixed(2)}</TableCell>
+                    <TableCell className="text-right">{usage.totalTokens.toLocaleString()}</TableCell> 
+                    <TableCell className="text-right">{usage.promptTokens.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">{usage.outputTokens.toLocaleString()}</TableCell>
+                    {/* <TableCell className="text-right">{usage.promptTokens}</TableCell>
+                    <TableCell className="text-right">{usage.outputTokens}</TableCell> */}
+                    <TableCell className="text-right">${usage.costInUSD.toFixed(4)}</TableCell>
                     <TableCell className="text-right">
                       {new Date(usage.lastUsed).toLocaleTimeString()}
                     </TableCell>
@@ -191,8 +212,9 @@ export default function TokenUsagePage() {
                         </span>
                       </div>
                     </TableCell>
-                  </TableRow>
-                ))
+                    </TableRow>
+                  ))
+              
               )}
             </TableBody>
           </Table>

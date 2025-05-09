@@ -36,6 +36,8 @@ export interface UserSubscription {
   CreatedAt: string;
   UpdatedAt: string;
   SubscriptionPlan?: SubscriptionPlan;
+  PromptTokenUsed: number;
+  CandidateTokenUsed: number;
 }
 
 export interface PurchaseSubscriptionRequest {
@@ -144,6 +146,9 @@ export class SubscriptionService {
       throw error;
     }
   }
+  
+
+  
   
   /**
    * Update subscription auto-renew setting

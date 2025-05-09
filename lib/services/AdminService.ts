@@ -62,7 +62,9 @@ export class AdminService {
       status: backendUser.Status || 'inactive',
       pluginActivation: backendUser.PluginActivation || 'inactive',
       tokensUsed: backendUser.TokensUsed || 0,
-      company: backendUser.Company || ''
+      company: backendUser.Company || '',
+      PromptTokenUsed: backendUser.PromptTokenUsed || 0,
+      OutputTokenUsed: backendUser.OutputTokenUsed || 0
     };
   }
 }

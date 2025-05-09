@@ -26,6 +26,8 @@ export type User = {
   status?: string; // Added for new API
   pluginActivation?: string; // Added for plugin activation status
   tokensUsed?: number; // Added for token usage tracking
+  PromptTokenUsed?: number;
+  OutputTokenUsed?: number;
 };
 
 export type UserStats = {
