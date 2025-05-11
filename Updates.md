@@ -1,4 +1,152 @@
-# Updates Log
+# Updates
+
+## 2023-11-01
+
+### UI Updates
+- Changed color scheme from orange/red to teal/blue with the following colors:
+  - Primary: #29f19c (teal/green)
+  - Secondary: #02a1f9 (blue)
+- Rebranded from "WooCommerce AI" to "Amperly AI"
+- Updated all gradients, buttons, and UI elements to match the new color scheme
+- Created a new logo using the Amperly colors
+
+### UI Color Refinement
+- Updated color scheme to use darker, more professional tones:
+  - Primary: #1cbe78 (darker teal/green) - changed from #29f19c
+  - Secondary: #0183c7 (darker blue) - changed from #02a1f9
+- Adjusted all gradients, logos, and UI elements to use the darker color palette
+- Enhanced visual consistency with deeper, richer color tones
+- Maintained the same functionality while providing a more sophisticated appearance
+
+### UI Color Refinement Continued
+- Removed all remaining orange/red colors from all pages
+- Updated login, signup, and dashboard pages with completely new background styles
+- Added various background gradient options for better visual diversity:
+  - Added directional gradients (top-left, bottom-left, top-right)
+  - Added radial and conic gradient options
+  - Added subtle variations with via-colors for more depth
+- Updated hover states and links to use the Amperly teal/blue colors
+- Added new color utilities to standardize all UI components:
+  - `.text-amperly-primary` and `.text-amperly-secondary`
+  - `.bg-amperly-primary-light` and `.bg-amperly-secondary-light`
+  - `.border-amperly-primary` and `.border-amperly-secondary`
+- Improved visual consistency across all types of pages (auth, dashboard, settings)
+
+### Settings Pages Updated
+- Updated all settings pages to use the Amperly teal/blue color scheme:
+  - Updated main settings page with new background gradients and text colors
+  - Updated content settings page with new input fields styling and button colors
+  - Updated prompts settings page with new tab styling and text areas appearance
+- Applied consistent styling across all settings pages:
+  - Changed loading spinner colors to use teal (#1cbe78)
+  - Updated all focus states to use the new color scheme
+  - Changed tabs styling to use the btn-gradient-amperly utility class
+  - Updated reset and save buttons to use the new colors
+- Improved visual consistency with other pages by using the same utility classes:
+  - bg-gradient-amperly-light-tr for loading screens
+  - bg-gradient-amperly-light-radial for content settings page
+  - bg-gradient-amperly-subtle for prompts settings page
+- Enhanced contrast and readability throughout the settings interface
+
+### Admin API Settings Updated
+- Updated the admin API settings page to use the Amperly teal/blue color scheme
+- Changed the background to use bg-gradient-amperly-tri for a more sophisticated admin interface
+- Updated form components:
+  - Changed input focus states to use the new color scheme
+  - Updated switch components to use the gradient-amperly class
+  - Modernized the buttons with the btn-gradient-amperly utility class
+- Simplified the monitoring tab UI for better usability
+- Maintained consistent styling with the rest of the application
+
+## 2023-11-25
+
+### UI Updates
+- Changed color scheme from orange/red to teal/blue with the following colors:
+  - Primary: #29f19c (teal/green)
+  - Secondary: #02a1f9 (blue)
+- Rebranded from "WooCommerce AI" to "Amperly AI"
+- Updated all gradients, buttons, and UI elements to match the new color scheme
+- Created a new logo using the Amperly colors
+
+## 2023-11-26
+
+### UI Color Refinement
+- Updated color scheme to use darker, more professional tones:
+  - Primary: #1cbe78 (darker teal/green) - changed from #29f19c
+  - Secondary: #0183c7 (darker blue) - changed from #02a1f9
+- Adjusted all gradients, logos, and UI elements to use the darker color palette
+- Enhanced visual consistency with deeper, richer color tones
+- Maintained the same functionality while providing a more sophisticated appearance
+
+## 2023-11-29
+
+### UI Color Refinement Continued
+- Removed all remaining orange/red colors from all pages
+- Updated login, signup, and dashboard pages with completely new background styles
+- Added various background gradient options for better visual diversity:
+  - Added directional gradients (top-left, bottom-left, top-right)
+  - Added radial and conic gradient options
+  - Added subtle variations with via-colors for more depth
+- Updated hover states and links to use the Amperly teal/blue colors
+- Added new color utilities to standardize all UI components:
+  - `.text-amperly-primary` and `.text-amperly-secondary`
+  - `.bg-amperly-primary-light` and `.bg-amperly-secondary-light`
+  - `.border-amperly-primary` and `.border-amperly-secondary`
+- Improved visual consistency across all types of pages (auth, dashboard, settings)
+
+### Settings Pages Updated
+- Updated all settings pages to use the Amperly teal/blue color scheme:
+  - Updated main settings page with new background gradients and text colors
+  - Updated content settings page with new input fields styling and button colors
+  - Updated prompts settings page with new tab styling and text areas appearance
+- Applied consistent styling across all settings pages:
+  - Changed loading spinner colors to use teal (#1cbe78)
+  - Updated all focus states to use the new color scheme
+  - Changed tabs styling to use the btn-gradient-amperly utility class
+  - Updated reset and save buttons to use the new colors
+- Improved visual consistency with other pages by using the same utility classes:
+  - bg-gradient-amperly-light-tr for loading screens
+  - bg-gradient-amperly-light-radial for content settings page
+  - bg-gradient-amperly-subtle for prompts settings page
+- Enhanced contrast and readability throughout the settings interface
+
+### Admin API Settings Updated
+- Updated the admin API settings page to use the Amperly teal/blue color scheme
+- Changed the background to use bg-gradient-amperly-tri for a more sophisticated admin interface
+- Updated form components:
+  - Changed input focus states to use the new color scheme
+  - Updated switch components to use the gradient-amperly class
+  - Modernized the buttons with the btn-gradient-amperly utility class
+- Simplified the monitoring tab UI for better usability
+- Maintained consistent styling with the rest of the application
+
+## 2024-07-25
+
+### 16:45 - Updated Settings Pages to Use Amperly Color Scheme
+- Updated all settings pages to use the Amperly teal/blue color scheme:
+  - Updated main settings page with new background gradients and text colors
+  - Updated content settings page with new input fields styling and button colors
+  - Updated prompts settings page with new tab styling and text areas appearance
+- Applied consistent styling across all settings pages:
+  - Changed loading spinner colors to use teal (#1cbe78)
+  - Updated all focus states to use the new color scheme
+  - Changed tabs styling to use the btn-gradient-amperly utility class
+  - Updated reset and save buttons to use the new colors
+- Improved visual consistency with other pages by using the same utility classes:
+  - bg-gradient-amperly-light-tr for loading screens
+  - bg-gradient-amperly-light-radial for content settings page
+  - bg-gradient-amperly-subtle for prompts settings page
+- Enhanced contrast and readability throughout the settings interface
+
+### 17:15 - Updated Admin API Settings Page
+- Updated the admin API settings page to use the Amperly teal/blue color scheme
+- Changed the background to use bg-gradient-amperly-tri for a more sophisticated admin interface
+- Updated form components:
+  - Changed input focus states to use the new color scheme
+  - Updated switch components to use the gradient-amperly class
+  - Modernized the buttons with the btn-gradient-amperly utility class
+- Simplified the monitoring tab UI for better usability
+- Maintained consistent styling with the rest of the application
 
 ## 2024-07-24
 
@@ -1118,7 +1266,7 @@
 - Implemented currency formatting and better date handling
 - Created responsive design for subscription plan cards
 
-## 2024-10-31
+## 2024-11-01
 
 ### Enhanced Subscription Card Styling
 
@@ -1144,7 +1292,7 @@
 - Improved empty state handling with more informative visuals
 - Implemented better information architecture for plan details
 
-## 2024-11-01
+## 2024-11-02
 
 ### Subscription Purchase Functionality Implementation
 
@@ -1430,3 +1578,117 @@
   - Changed section title to "Settings" for clarity
   - Updated icons and descriptions to match settings focus
   - Improved grid layout for better visual balance
+
+## 2023-11-25
+
+### UI Updates
+- Changed color scheme from orange/red to teal/blue with the following colors:
+  - Primary: #29f19c (teal/green)
+  - Secondary: #02a1f9 (blue)
+- Rebranded from "WooCommerce AI" to "Amperly AI"
+- Updated all gradients, buttons, and UI elements to match the new color scheme
+- Created a new logo using the Amperly colors
+
+## 2023-11-26
+
+### UI Color Refinement
+- Updated color scheme to use darker, more professional tones:
+  - Primary: #1cbe78 (darker teal/green) - changed from #29f19c
+  - Secondary: #0183c7 (darker blue) - changed from #02a1f9
+- Adjusted all gradients, logos, and UI elements to use the darker color palette
+- Enhanced visual consistency with deeper, richer color tones
+- Maintained the same functionality while providing a more sophisticated appearance
+
+## 2023-11-29
+
+### UI Color Refinement Continued
+- Removed all remaining orange/red colors from all pages
+- Updated login, signup, and dashboard pages with completely new background styles
+- Added various background gradient options for better visual diversity:
+  - Added directional gradients (top-left, bottom-left, top-right)
+  - Added radial and conic gradient options
+  - Added subtle variations with via-colors for more depth
+- Updated hover states and links to use the Amperly teal/blue colors
+- Added new color utilities to standardize all UI components:
+  - `.text-amperly-primary` and `.text-amperly-secondary`
+  - `.bg-amperly-primary-light` and `.bg-amperly-secondary-light`
+  - `.border-amperly-primary` and `.border-amperly-secondary`
+- Improved visual consistency across all types of pages (auth, dashboard, settings)
+
+## 2024-07-27
+
+### 22:15 - Updated Logo Component to Use the New Image
+- Modified the Logo component to use next/image for displaying amperly-icon-512-2022.png
+- Replaced rotating gradient "A" logo with the new static image
+- Updated the admin sidebar logo to use the same image when collapsed
+- Added Image import in Admin layout for proper Next.js image optimization
+- Created a comprehensive update guide in public/AMPERLY-LOGO-UPDATE-GUIDE.md
+- Updated all existing documents to point to the new guide
+
+### 22:00 - Updated App Logo to amperly-icon-512-2022.png
+- Replaced previous gradient teal/blue icon with the new Amperly icon
+- Updated all favicon and icon files with the new logo
+- Used the same image file for both application logo and favicon
+- Ensured consistent branding across all platforms
+
+## 2024-07-28
+
+### 16:30 - Fixed Orange Colors in Subscription Plans
+- Updated subscription plans to use Amperly color scheme:
+  - Changed "Select Plan" button from orange gradient to Amperly gradient
+  - Updated "Proceed to Purchase" button to use btn-gradient-amperly class
+  - Changed "Confirm Subscription" button to use btn-gradient-amperly class
+  - Updated selected plan indicator from orange gradient to Amperly teal/blue gradient
+- Maintained consistent styling with other pages in the application
+- Enhanced visual consistency with the Amperly brand identity
+
+### 10:45 - Fixed Orange Color on Logout Page
+- Updated the logout page to use Amperly color scheme:
+  - Changed background from orange-red gradient to Amperly light gradient
+  - Updated loading spinner border color to use Amperly primary color
+  - Changed "Return to Login" button text from orange to Amperly primary colors
+- Maintained consistent styling with other pages in the application
+- Enhanced visual consistency with the Amperly brand identity
+
+### 17:15 - Fixed Orange Colors in WordPress Activation Pages
+- Updated all WordPress activation pages to use Amperly color scheme:
+  - Changed background gradients from orange/red to Amperly light gradient
+  - Updated button styles to use btn-gradient-amperly class
+  - Changed card header gradients to Amperly colors
+  - Updated border colors to use Amperly primary light
+  - Changed text coloring from orange/red to Amperly primary
+  - Updated icons to use Amperly color palette
+  - Modified all accent colors to match Amperly brand identity
+- Enhanced visual consistency across the application
+- Improved user experience with cohesive color scheme
+- Updated both main activation page and subscription selection page
+
+### 16:30 - Fixed Orange Colors in Subscription Plans
+- Updated subscription plans to use Amperly color scheme:
+  - Changed "Select Plan" button from orange gradient to Amperly gradient
+  - Updated "Proceed to Purchase" button to use btn-gradient-amperly class
+  - Changed "Confirm Subscription" button to use btn-gradient-amperly class
+  - Updated selected plan indicator from orange gradient to Amperly teal/blue gradient
+- Maintained consistent styling with other pages in the application
+- Enhanced visual consistency with the Amperly brand identity
+
+### 19:30 - Fixed Orange Colors in WordPress Activation Pages
+- Updated all WordPress activation subscription pages to use Amperly color scheme:
+  - Changed loading fallback background from orange/red gradient to Amperly light gradient
+  - Updated loading spinner border color from red to Amperly primary
+  - Changed decorative circles from orange/red/amber to Amperly teal/blue gradients
+  - Updated button styles from orange/red gradients to btn-gradient-amperly class
+  - Changed badge colors from amber/orange to Amperly color palette
+  - Updated status indicators and checkmarks to use Amperly primary colors
+  - Modified all card headers and borders to match Amperly theme
+  - Changed trial plan indicators to use Amperly colors
+  - Replaced all success/info boxes with Amperly-styled alternatives
+- Enhanced visual consistency across all WordPress integration pages
+- Improved user experience with cohesive Amperly color scheme throughout the activation process
+
+### 20:15 - Fixed Orange Login and Signup Buttons in WordPress Activation Page
+- Updated the login and signup buttons in WordPress activation components:
+  - Changed login button from orange/red gradient to Amperly gradient with btn-gradient-amperly class
+  - Changed signup button from orange/red gradient to Amperly gradient with btn-gradient-amperly class
+- Enhanced visual consistency with the rest of the activation process
+- Completed the color scheme update across all WordPress integration pages

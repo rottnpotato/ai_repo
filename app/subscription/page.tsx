@@ -98,7 +98,7 @@ export default function SubscriptionPage() {
 
   if (isLoading || !isAuthenticated || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-amperly-light-tr">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     )
@@ -224,7 +224,7 @@ export default function SubscriptionPage() {
   const selectedPlanDetails = getSelectedPlanDetails();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-amperly-light-conic py-8 px-4">
       <div className="max-w-6xl mx-auto">
         <header className="flex items-center justify-between mb-8">
           <div className="flex items-center">
@@ -237,7 +237,7 @@ export default function SubscriptionPage() {
           <Button
             variant="outline"
             size="sm"
-            className="border-red-200 text-red-600 hover:bg-red-50"
+            className="border-amperly-primary text-amperly-primary hover:bg-amperly-primary-light"
             onClick={() => router.push("/logout")}
           >
             Logout
@@ -250,14 +250,14 @@ export default function SubscriptionPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
-              <Card className="border-orange-100 shadow-md mb-8 overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-orange-50 to-amber-50 border-b border-orange-100">
+              <Card className="border-amperly-primary shadow-md mb-8 overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-[#e5f8f3] to-[#ddf2ff] border-b border-[#1cbe78]/20">
                   <CardTitle>Current Plan</CardTitle>
                   <CardDescription>Your active subscription details</CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
                   {activePlan ? (
-                    <div className="bg-orange-50 rounded-lg p-5 mb-5 border border-orange-100">
+                    <div className="bg-[#e5f8f3] rounded-lg p-5 mb-5 border border-[#1cbe78]/20">
                       <div className="flex justify-between items-start">
                         <div>
                           <h3 className="text-xl font-bold text-gray-900">{activePlan.Name}</h3>
@@ -272,7 +272,7 @@ export default function SubscriptionPage() {
                         </div>
                       </div>
 
-                      <div className="mt-5 pt-4 border-t border-orange-100 space-y-3">
+                      <div className="mt-5 pt-4 border-t border-[#1cbe78]/20 space-y-3">
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600 font-medium">Tokens Used:</span>
                           <span className="font-semibold">{subscription!.TokensUsed.toLocaleString()} / {activePlan.MaxTokens.toLocaleString()}</span>
@@ -296,10 +296,10 @@ export default function SubscriptionPage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-orange-50 rounded-lg p-5 mb-5 border border-orange-100 text-center">
+                    <div className="bg-[#e5f8f3] rounded-lg p-5 mb-5 border border-[#1cbe78]/20 text-center">
                       <div className="mb-3">
-                        <div className="inline-flex items-center justify-center w-12 h-12 bg-orange-100 rounded-full mb-3">
-                          <Info className="h-6 w-6 text-orange-600" />
+                        <div className="inline-flex items-center justify-center w-12 h-12 bg-[#e5f8f3] rounded-full mb-3">
+                          <Info className="h-6 w-6 text-[#0183c7]" />
                         </div>
                       </div>
                       <h3 className="text-lg font-bold text-gray-900 mb-2">No active subscription found</h3>
@@ -309,15 +309,15 @@ export default function SubscriptionPage() {
 
                   <Button 
                     onClick={() => setShowChangePlanDialog(true)} 
-                    className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white"
+                    className="w-full btn-gradient-amperly"
                   >
                     {activePlan ? "Change Plan" : "Choose a Plan"}
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="border-orange-100 shadow-md overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-orange-50 to-amber-50 border-b border-orange-100">
+              <Card className="border-amperly-primary shadow-md overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-[#e5f8f3] to-[#ddf2ff] border-b border-[#1cbe78]/20">
                   <CardTitle>Payment Methods</CardTitle>
                   <CardDescription>Manage your payment information</CardDescription>
                 </CardHeader>
@@ -373,7 +373,7 @@ export default function SubscriptionPage() {
                   <Button 
                     variant="outline" 
                     onClick={() => setShowAddCard(true)} 
-                    className="w-full mt-5 border-orange-200 text-orange-600 hover:bg-orange-50"
+                    className="w-full mt-5 border-amperly-primary text-amperly-primary hover:bg-amperly-primary-light"
                   >
                     <CreditCard className="h-4 w-4 mr-2" />
                     Add Payment Method
@@ -383,8 +383,8 @@ export default function SubscriptionPage() {
             </div>
 
             <div>
-              <Card className="border-orange-100 shadow-md sticky top-8 overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-orange-50 to-amber-50 border-b border-orange-100">
+              <Card className="border-amperly-primary shadow-md sticky top-8 overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-[#e5f8f3] to-[#ddf2ff] border-b border-[#1cbe78]/20">
                   <CardTitle>Need Help?</CardTitle>
                   <CardDescription>Resources and support</CardDescription>
                 </CardHeader>
@@ -425,7 +425,7 @@ export default function SubscriptionPage() {
 
                   <Button 
                     variant="outline" 
-                    className="w-full border-orange-200 text-orange-600 hover:bg-orange-50 mt-2" 
+                    className="w-full border-amperly-primary text-amperly-primary hover:bg-amperly-primary-light mt-2" 
                     onClick={() => {}}
                   >
                     View FAQ
@@ -507,7 +507,7 @@ export default function SubscriptionPage() {
                       {/* Trial Unavailable Overlay */}
                       {isTrialUnavailable && (
                         <div className="absolute inset-0 bg-gray-200 bg-opacity-70 flex flex-col items-center justify-center z-10 p-4">
-                          <AlertCircle className="h-8 w-8 text-orange-500 mb-2" />
+                          <AlertCircle className="h-8 w-8 text-amperly-secondary mb-2" />
                           <p className="text-center font-medium text-gray-900">
                             You've already used your trial
                           </p>
@@ -521,19 +521,19 @@ export default function SubscriptionPage() {
                       <div
                         className={`h-full flex flex-col border-2 rounded-xl overflow-hidden ${
                           selectedPlan === plan.Id
-                            ? "border-orange-400 bg-gradient-to-br from-orange-50 to-amber-50"
+                            ? "border-[#1cbe78] bg-gradient-to-br from-[#e5f8f3] to-[#ddf2ff]"
                             : isCurrentPlan 
-                              ? "border-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50"
-                              : "border-gray-200 bg-white hover:border-gray-300"
+                              ? "border-[#0183c7] bg-gradient-to-br from-[#ddf2ff] to-[#e6f4ff]"
+                              : "border-gray-200"
                         } ${isTrialUnavailable ? "opacity-60" : ""}`}
                       >
                         {/* Plan Header */}
                         <div className={`px-5 py-4 border-b ${
                           selectedPlan === plan.Id
-                            ? "border-orange-200 bg-orange-100/50"
+                            ? "border-[#1cbe78]/30 bg-[#e5f8f3]/50"
                             : isCurrentPlan 
-                              ? "border-blue-200 bg-blue-100/50"
-                              : "border-gray-100"
+                              ? "border-[#0183c7]/30 bg-[#ddf2ff]/50"
+                              : "border-gray-200"
                         }`}>
                           <div className="flex justify-between items-start mb-1">
                             <h3 className="font-bold text-lg text-gray-900">{plan.Name}</h3>
@@ -610,7 +610,7 @@ export default function SubscriptionPage() {
                             className={`w-full ${
                               isCurrentPlan || isTrialUnavailable
                                 ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                : "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white"
+                                : "btn-gradient-amperly"
                             }`}
                           >
                             {isCurrentPlan ? "Current Plan" : (isTrialUnavailable ? "Not Available" : "Select Plan")}
@@ -619,7 +619,7 @@ export default function SubscriptionPage() {
                         
                         {/* Selected Indicator */}
                         {selectedPlan === plan.Id && (
-                          <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-r from-orange-400 to-amber-400"></div>
+                          <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-r from-[#1cbe78] to-[#0183c7]"></div>
                         )}
                       </div>
                     </motion.div>
@@ -649,7 +649,7 @@ export default function SubscriptionPage() {
                 disabled={!selectedPlan! || (activePlan! && selectedPlan === activePlan!.Id)}
                 className={`${!selectedPlan! || (activePlan! && selectedPlan === activePlan!.Id) 
                   ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
-                  : 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600'}`}
+                  : 'btn-gradient-amperly'}`}
               >
                 {isPurchasing ? (
                   <>
@@ -764,7 +764,7 @@ export default function SubscriptionPage() {
               <Button 
                 onClick={handleConfirmPurchase}
                 disabled={isPurchasing}
-                className={`${isPurchasing ? 'opacity-70 cursor-not-allowed' : ''} bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600`}
+                className={`${isPurchasing ? 'opacity-70 cursor-not-allowed' : ''} btn-gradient-amperly`}
               >
                 {isPurchasing ? (
                   <>

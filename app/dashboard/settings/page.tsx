@@ -24,8 +24,8 @@ export default function SettingsPage() {
 
   if (isLoading || !isAuthenticated || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-amperly-light-radial">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1cbe78]"></div>
       </div>
     )
   }
@@ -34,19 +34,19 @@ export default function SettingsPage() {
     {
       title: "Content Settings",
       description: "Customize content generation parameters and styles",
-      icon: <FileText className="h-5 w-5 text-orange-500" />,
+      icon: <FileText className="h-5 w-5 text-amperly-primary" />,
       href: "/dashboard/settings/content",
     },
     {
       title: "Prompt Settings",
       description: "Manage AI prompts for different content types",
-      icon: <MessageSquare className="h-5 w-5 text-red-500" />,
+      icon: <MessageSquare className="h-5 w-5 text-amperly-secondary" />,
       href: "/dashboard/settings/prompts",
     },
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-amperly-light-conic py-8 px-4">
       <div className="max-w-6xl mx-auto">
         <header className="flex items-center justify-between mb-8">
           <div className="flex items-center">
@@ -59,7 +59,7 @@ export default function SettingsPage() {
           <Button
             variant="outline"
             size="sm"
-            className="border-red-200 text-red-600 hover:bg-red-50"
+            className="border-amperly-primary text-amperly-primary hover:bg-amperly-primary-light"
             onClick={() => router.push("/logout")}
           >
             Logout
@@ -79,9 +79,9 @@ export default function SettingsPage() {
             {settingsLinks.map((link, index) => (
               <motion.div key={link.href} variants={fadeIn("up", "tween", 0.1 * (index + 1), 0.5)}>
                 <Link href={link.href} className="block h-full group">
-                  <Card className="h-full transition-all duration-300 border-transparent bg-white/80 backdrop-blur-sm hover:shadow-lg hover:shadow-orange-100 hover:border-orange-200 group-hover:translate-y-[-2px]">
+                  <Card className="h-full transition-all duration-300 border-transparent bg-white/80 backdrop-blur-sm hover:shadow-lg hover:shadow-[#1cbe78]/20 hover:border-[#1cbe78]/30 group-hover:translate-y-[-2px]">
                     <CardHeader className="pb-3">
-                      <CardTitle className="flex items-center text-lg group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-orange-500 group-hover:to-red-500">
+                      <CardTitle className="flex items-center text-lg group-hover:text-gradient-amperly">
                         <span className="mr-2">{link.icon}</span>
                         {link.title}
                       </CardTitle>
@@ -89,9 +89,9 @@ export default function SettingsPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="flex justify-end">
-                        <div className="text-sm font-medium bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent flex items-center">
+                        <div className="text-sm font-medium text-gradient-amperly flex items-center">
                           Configure
-                          <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1 text-red-500" />
+                          <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1 text-amperly-secondary" />
                         </div>
                       </div>
                     </CardContent>
@@ -103,19 +103,19 @@ export default function SettingsPage() {
             {isAdmin && (
               <motion.div variants={fadeIn("up", "tween", 0.3, 0.5)}>
                 <Link href="/admin/settings/api-settings" className="block h-full group">
-                  <Card className="h-full transition-all duration-300 border-transparent bg-orange-50/80 backdrop-blur-sm hover:shadow-lg hover:shadow-orange-100 hover:border-orange-200 group-hover:translate-y-[-2px]">
+                  <Card className="h-full transition-all duration-300 border-transparent bg-[#e5f8f3]/80 backdrop-blur-sm hover:shadow-lg hover:shadow-[#1cbe78]/20 hover:border-[#1cbe78]/30 group-hover:translate-y-[-2px]">
                     <CardHeader className="pb-3">
-                      <CardTitle className="flex items-center text-lg group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-orange-500 group-hover:to-red-500">
-                        <span className="mr-2"><Settings className="h-5 w-5 text-orange-500" /></span>
+                      <CardTitle className="flex items-center text-lg group-hover:text-gradient-amperly">
+                        <span className="mr-2"><Settings className="h-5 w-5 text-amperly-primary" /></span>
                         Admin API Settings
                       </CardTitle>
                       <CardDescription className="text-gray-600">Configure API keys and provider settings (Admin only)</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex justify-end">
-                        <div className="text-sm font-medium bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent flex items-center">
+                        <div className="text-sm font-medium text-gradient-amperly flex items-center">
                           Configure
-                          <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1 text-red-500" />
+                          <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1 text-amperly-secondary" />
                         </div>
                       </div>
                     </CardContent>

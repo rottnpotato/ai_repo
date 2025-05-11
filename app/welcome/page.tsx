@@ -141,7 +141,7 @@ export default function WelcomePage() {
 
   if (isLoading || !isAuthenticated || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-amperly-subtle">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     )
@@ -209,7 +209,7 @@ export default function WelcomePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 py-12 px-4">
+    <div className="min-h-screen bg-gradient-amperly-light-conic py-12 px-4">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -264,7 +264,7 @@ export default function WelcomePage() {
                 </div>
                 <p className="text-gray-600 mb-4">{plan.description}</p>
                 {plan.trial && (
-                  <div className="bg-orange-50 text-orange-700 px-3 py-2 rounded-lg text-sm font-medium mb-6">
+                  <div className="bg-amperly-primary-light text-[#1cbe78] px-3 py-2 rounded-lg text-sm font-medium mb-6">
                     {plan.trial}
                   </div>
                 )}

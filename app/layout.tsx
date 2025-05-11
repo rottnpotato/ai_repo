@@ -28,7 +28,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <title>WooCommerce AI | Automate customer interactions with AI</title>
+        <title>Amperly AI | Automate customer interactions with AI</title>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
       <body className={figtree.className}>
         {/* SessionProvider is maintained for backward compatibility */}

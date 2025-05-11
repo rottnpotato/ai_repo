@@ -28,8 +28,8 @@ export default function AdminApiSettingsPage() {
   // Redirect if not authenticated or not admin
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-amperly-light-radial">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1cbe78]"></div>
       </div>
     )
   }
@@ -40,7 +40,7 @@ export default function AdminApiSettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-amperly-tri py-8 px-4">
       <div className="max-w-6xl mx-auto">
         <header className="flex items-center justify-between mb-8">
           <div className="flex items-center">
@@ -53,7 +53,7 @@ export default function AdminApiSettingsPage() {
           <Button
             variant="outline"
             size="sm"
-            className="border-red-200 text-red-600 hover:bg-red-50"
+            className="border-amperly-primary text-amperly-primary hover:bg-amperly-primary-light"
             onClick={() => router.push("/logout")}
           >
             Logout
@@ -66,13 +66,13 @@ export default function AdminApiSettingsPage() {
 
           <Tabs defaultValue="providers" className="w-full max-w-4xl">
             <TabsList className="grid grid-cols-3 mb-6 bg-white/60 backdrop-blur-sm">
-              <TabsTrigger value="providers" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white">
+              <TabsTrigger value="providers" className="data-[state=active]:bg-gradient-amperly data-[state=active]:text-white">
                 API Providers
               </TabsTrigger>
-              <TabsTrigger value="limits" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white">
+              <TabsTrigger value="limits" className="data-[state=active]:bg-gradient-amperly data-[state=active]:text-white">
                 Usage & Limits
               </TabsTrigger>
-              <TabsTrigger value="monitoring" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white">
+              <TabsTrigger value="monitoring" className="data-[state=active]:bg-gradient-amperly data-[state=active]:text-white">
                 Monitoring
               </TabsTrigger>
             </TabsList>
@@ -82,7 +82,7 @@ export default function AdminApiSettingsPage() {
                 <Card className="border-transparent bg-white/80 backdrop-blur-sm shadow-md hover:shadow-lg transition-shadow duration-300">
                   <CardHeader>
                     <CardTitle className="flex items-center">
-                      <Key className="h-5 w-5 text-orange-500 mr-2" />
+                      <Key className="h-5 w-5 text-amperly-primary mr-2" />
                       AI Provider Configuration
                     </CardTitle>
                     <CardDescription>
@@ -95,7 +95,7 @@ export default function AdminApiSettingsPage() {
                         API Provider
                       </Label>
                       <Select value={apiProvider} onValueChange={setApiProvider}>
-                        <SelectTrigger id="api-provider" className="w-full bg-white border-gray-200 text-gray-900 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50">
+                        <SelectTrigger id="api-provider" className="w-full bg-white border-gray-200 text-gray-900 focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50">
                           <SelectValue placeholder="Select API provider" />
                         </SelectTrigger>
                         <SelectContent className="bg-white border-gray-200 text-gray-900">
@@ -119,13 +119,13 @@ export default function AdminApiSettingsPage() {
                           type={showApiKey ? "text" : "password"}
                           value={apiKey}
                           onChange={(e) => setApiKey(e.target.value)}
-                          className="bg-white border-gray-200 text-gray-900 pr-10 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                          className="bg-white border-gray-200 text-gray-900 pr-10 focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                           placeholder="Enter your API key"
                         />
                         <button
                           type="button"
                           onClick={() => setShowApiKey(!showApiKey)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-orange-500"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-amperly-primary"
                         >
                           {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
@@ -135,14 +135,14 @@ export default function AdminApiSettingsPage() {
                         href={apiProvider === "OpenAI" ? "https://platform.openai.com/api-keys" : "#"}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent hover:from-orange-600 hover:to-red-600 mt-1 inline-block"
+                        className="text-sm text-gradient-amperly hover:opacity-80 mt-1 inline-block"
                       >
                         Get your {apiProvider} key from {apiProvider}
                       </a>
                     </div>
 
                     <div className="pt-4">
-                      <Button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
+                      <Button className="btn-gradient-amperly transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
                         <Save className="mr-2 h-4 w-4" />
                         Save Provider Settings
                       </Button>
@@ -157,7 +157,7 @@ export default function AdminApiSettingsPage() {
                 <Card className="border-transparent bg-white/80 backdrop-blur-sm shadow-md hover:shadow-lg transition-shadow duration-300">
                   <CardHeader>
                     <CardTitle className="flex items-center">
-                      <Cpu className="h-5 w-5 text-orange-500 mr-2" />
+                      <Cpu className="h-5 w-5 text-amperly-primary mr-2" />
                       API Usage Limits
                     </CardTitle>
                     <CardDescription>
@@ -174,14 +174,14 @@ export default function AdminApiSettingsPage() {
                         type="number"
                         value={rateLimit}
                         onChange={(e) => setRateLimit(e.target.value)}
-                        className="bg-white border-gray-200 text-gray-900 w-full max-w-xs focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                        className="bg-white border-gray-200 text-gray-900 w-full max-w-xs focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                       />
                       <p className="text-sm text-gray-500 mt-2">Limit the number of API requests per minute</p>
                     </div>
 
                     <div>
                       <Label htmlFor="throttling" className="text-gray-900 mb-2 block flex items-center space-x-2">
-                        <Switch id="throttling" defaultChecked className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-orange-500 data-[state=checked]:to-red-500" />
+                        <Switch id="throttling" defaultChecked className="data-[state=checked]:bg-gradient-amperly" />
                         <span>Enable Request Throttling</span>
                       </Label>
                       <p className="text-sm text-gray-500 mt-2 ml-11">Automatically throttle requests when approaching limits</p>
@@ -189,7 +189,7 @@ export default function AdminApiSettingsPage() {
 
                     <div>
                       <Label htmlFor="quota" className="text-gray-900 mb-2 block flex items-center space-x-2">
-                        <Switch id="quota" defaultChecked className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-orange-500 data-[state=checked]:to-red-500" />
+                        <Switch id="quota" defaultChecked className="data-[state=checked]:bg-gradient-amperly" />
                         <span>Set Monthly Quota</span>
                       </Label>
                       <div className="ml-11 mt-3">
@@ -197,14 +197,14 @@ export default function AdminApiSettingsPage() {
                           id="quota-amount"
                           type="number"
                           defaultValue="5000"
-                          className="bg-white border-gray-200 text-gray-900 w-full max-w-xs focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                          className="bg-white border-gray-200 text-gray-900 w-full max-w-xs focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                         />
-                        <p className="text-sm text-gray-500 mt-2">Maximum number of API requests per month</p>
+                        <p className="text-sm text-gray-500 mt-2">Maximum number of requests allowed per month</p>
                       </div>
                     </div>
 
                     <div className="pt-4">
-                      <Button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
+                      <Button className="btn-gradient-amperly transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
                         <Save className="mr-2 h-4 w-4" />
                         Save Limit Settings
                       </Button>
@@ -215,64 +215,54 @@ export default function AdminApiSettingsPage() {
             </TabsContent>
 
             <TabsContent value="monitoring">
-              <motion.div variants={fadeIn("up", "tween", 0.2, 0.5)}>
+              <motion.div variants={fadeIn("up", "tween", 0.3, 0.5)}>
                 <Card className="border-transparent bg-white/80 backdrop-blur-sm shadow-md hover:shadow-lg transition-shadow duration-300">
                   <CardHeader>
                     <CardTitle className="flex items-center">
-                      <CheckCircle className="h-5 w-5 text-orange-500 mr-2" />
-                      API Monitoring Settings
+                      <CheckCircle className="h-5 w-5 text-amperly-primary mr-2" />
+                      Usage Monitoring
                     </CardTitle>
                     <CardDescription>
-                      Configure how API usage is monitored and alerted
+                      Configure API usage tracking and alerts
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div>
-                      <Label className="text-gray-900 mb-2 block flex items-center space-x-2">
-                        <Switch checked={usageMonitoring} onCheckedChange={setUsageMonitoring} className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-orange-500 data-[state=checked]:to-red-500" />
+                      <Label htmlFor="enable-monitoring" className="text-gray-900 mb-2 block flex items-center space-x-2">
+                        <Switch 
+                          id="enable-monitoring" 
+                          checked={usageMonitoring}
+                          onCheckedChange={setUsageMonitoring}
+                          className="data-[state=checked]:bg-gradient-amperly"
+                        />
                         <span>Enable Usage Monitoring</span>
                       </Label>
-                      <p className="text-sm text-gray-500 mt-2 ml-11">Track and log all API requests and responses</p>
+                      <p className="text-sm text-gray-500 mt-2 ml-11">Track API usage and display in dashboard</p>
                     </div>
 
                     <div>
-                      <Label htmlFor="alert-threshold" className="text-gray-900 mb-2 block flex items-center space-x-2">
-                        <Switch id="alert-threshold" defaultChecked className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-orange-500 data-[state=checked]:to-red-500" />
-                        <span>Usage Threshold Alerts</span>
+                      <Label htmlFor="email-alerts" className="text-gray-900 mb-2 block flex items-center space-x-2">
+                        <Switch id="email-alerts" defaultChecked className="data-[state=checked]:bg-gradient-amperly" />
+                        <span>Email Alerts</span>
                       </Label>
-                      <div className="ml-11 mt-3 grid grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="warn-threshold" className="text-sm text-gray-700">Warning Threshold</Label>
-                          <Select defaultValue="80">
-                            <SelectTrigger id="warn-threshold" className="bg-white border-gray-200 text-gray-900 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50">
-                              <SelectValue placeholder="Select threshold" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="70">70% of limit</SelectItem>
-                              <SelectItem value="80">80% of limit</SelectItem>
-                              <SelectItem value="90">90% of limit</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label htmlFor="critical-threshold" className="text-sm text-gray-700">Critical Threshold</Label>
-                          <Select defaultValue="95">
-                            <SelectTrigger id="critical-threshold" className="bg-white border-gray-200 text-gray-900 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50">
-                              <SelectValue placeholder="Select threshold" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="90">90% of limit</SelectItem>
-                              <SelectItem value="95">95% of limit</SelectItem>
-                              <SelectItem value="99">99% of limit</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                      <p className="text-sm text-gray-500 mt-2 ml-11">Get notified when approaching usage limits</p>
+                      <p className="text-sm text-gray-500 mt-2 ml-11">Send email alerts when usage exceeds thresholds</p>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="warning-threshold" className="text-gray-900 mb-2 block">
+                        Warning Threshold (%)
+                      </Label>
+                      <Input
+                        id="warning-threshold"
+                        type="number"
+                        defaultValue="80"
+                        className="bg-white border-gray-200 text-gray-900 w-full max-w-xs focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
+                      />
+                      <p className="text-sm text-gray-500 mt-2">Send warning when usage reaches this percentage of limit</p>
                     </div>
 
                     <div className="pt-4">
-                      <Button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
+                      <Button className="btn-gradient-amperly transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
                         <Save className="mr-2 h-4 w-4" />
                         Save Monitoring Settings
                       </Button>

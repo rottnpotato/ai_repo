@@ -2,6 +2,7 @@
 
 import type { FC } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { motion } from "framer-motion"
 
 interface LogoProps {
@@ -26,28 +27,19 @@ export const Logo: FC<LogoProps> = ({ size = "md", withText = true, className = 
   return (
     <Link href="/dashboard" className={`flex items-center gap-2 ${className}`}>
       <div className="relative">
-        <motion.div
-          initial={{ rotate: 0 }}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-          className={`${sizes[size]} rounded-full bg-gradient-to-br from-orange-400 to-red-600 flex items-center justify-center`}
-        >
-          <div className="absolute inset-1 rounded-full bg-white flex items-center justify-center">
-            <div
-              className={`${size === "sm" ? "h-3 w-3" : size === "md" ? "h-4 w-4" : "h-5 w-5"} rounded-full bg-gradient-to-br from-orange-400 to-red-600`}
-            ></div>
-          </div>
-        </motion.div>
+        <Image
+          src="/amperly-icon-512-2022.png"
+          alt="Amperly AI Logo"
+          width={size === "lg" ? 40 : size === "md" ? 32 : 24}
+          height={size === "lg" ? 40 : size === "md" ? 32 : 24}
+          className={`${sizes[size]} rounded-md`}
+          priority
+        />
       </div>
       {withText && (
-        <div className="flex flex-col">
-          <span
-            className={`font-bold ${textSizes[size]} bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent leading-tight`}
-          >
-            WooCommerce AI
-          </span>
-          {size !== "sm" && <span className="text-xs font-medium text-gray-500 -mt-1">Automate customer interactions</span>}
-        </div>
+        <span className={`font-bold ${textSizes[size]} text-gradient-amperly`}>
+          Amperly<span className="text-foreground/90">AI</span>
+        </span>
       )}
     </Link>
   )

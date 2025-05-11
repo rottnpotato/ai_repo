@@ -35,14 +35,14 @@ export default function ContentSettingsPage() {
 
   if (isLoading || !isAuthenticated || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-amperly-light-tr">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1cbe78]"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-amperly-light-radial py-8 px-4">
       <div className="max-w-4xl mx-auto">
         <header className="flex items-center justify-between mb-8">
           <div className="flex items-center">
@@ -55,7 +55,7 @@ export default function ContentSettingsPage() {
           <Button
             variant="outline"
             size="sm"
-            className="border-red-200 text-red-600 hover:bg-red-50"
+            className="border-amperly-primary text-amperly-primary hover:bg-amperly-primary-light"
             onClick={() => router.push("/logout")}
           >
             Logout
@@ -70,7 +70,7 @@ export default function ContentSettingsPage() {
 
           <Tabs defaultValue="general" className="w-full">
             <TabsList className="grid grid-cols-1 mb-6 bg-white/60 backdrop-blur-sm">
-              <TabsTrigger value="general" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white">
+              <TabsTrigger value="general" className="data-[state=active]:bg-gradient-amperly data-[state=active]:text-white">
                 General
               </TabsTrigger>
             </TabsList>
@@ -80,7 +80,7 @@ export default function ContentSettingsPage() {
                 <Card className="border-transparent bg-white/80 backdrop-blur-sm shadow-md hover:shadow-lg transition-shadow duration-300">
                   <CardHeader>
                     <CardTitle className="flex items-center">
-                      <Settings className="h-5 w-5 text-orange-500 mr-2" />
+                      <Settings className="h-5 w-5 text-amperly-primary mr-2" />
                       Content Generation Parameters
                     </CardTitle>
                     <CardDescription>
@@ -98,7 +98,7 @@ export default function ContentSettingsPage() {
                           type="number"
                           value={maxLength}
                           onChange={(e) => setMaxLength(e.target.value)}
-                          className="bg-white border-gray-200 text-gray-900 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                          className="bg-white border-gray-200 text-gray-900 focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                         />
                         <p className="text-sm text-gray-500 mt-2">Character limit for normal product descriptions</p>
                       </div>
@@ -112,7 +112,7 @@ export default function ContentSettingsPage() {
                           type="number"
                           value={maxShortLength}
                           onChange={(e) => setMaxShortLength(e.target.value)}
-                          className="bg-white border-gray-200 text-gray-900 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                          className="bg-white border-gray-200 text-gray-900 focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                         />
                         <p className="text-sm text-gray-500 mt-2">Character limit for short product descriptions</p>
                       </div>
@@ -127,13 +127,13 @@ export default function ContentSettingsPage() {
                         type="number"
                         value={maxTagCount}
                         onChange={(e) => setMaxTagCount(e.target.value)}
-                        className="bg-white border-gray-200 text-gray-900 max-w-xs focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                        className="bg-white border-gray-200 text-gray-900 max-w-xs focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                       />
                       <p className="text-sm text-gray-500 mt-2">Maximum number of tags to generate for products</p>
                     </div>
 
                     <div className="pt-4">
-                      <Button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
+                      <Button className="btn-gradient-amperly transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
                         <Save className="mr-2 h-4 w-4" />
                         Save General Settings
                       </Button>

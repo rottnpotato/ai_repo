@@ -10,30 +10,30 @@
     --card-foreground: 222 47% 18%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 18%;
-    --primary: 246 80% 59%;
+    --primary: 162 88% 45%; /* #1cbe78 - darker version of #29f19c */
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222 47% 18%;
-    --muted: 210 40% 96.1%;
+    --secondary: 202 98% 40%; /* #0183c7 - darker version of #02a1f9 */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 182 60% 96.1%;
     --muted-foreground: 220 13% 60%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 246 80% 59%;
+    --accent: 182 60% 96.1%;
+    --accent-foreground: 162 88% 45%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 246 80% 59%;
+    --border: 182 30% 91%;
+    --input: 182 30% 91%;
+    --ring: 162 88% 45%;
     --radius: 0.5rem;
 
     /* Sidebar variables */
     --sidebar: 222 47% 18%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 246 80% 59%;
+    --sidebar-primary: 162 88% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 246 80% 96%;
-    --sidebar-accent-foreground: 246 80% 59%;
+    --sidebar-accent: 202 60% 96%;
+    --sidebar-accent-foreground: 202 98% 40%;
     --sidebar-border: 215 25% 27%;
-    --sidebar-ring: 246 80% 59%;
+    --sidebar-ring: 162 88% 45%;
   }
 
   .dark {
@@ -43,10 +43,10 @@
     --card-foreground: 210 40% 98%;
     --popover: 222 47% 12%;
     --popover-foreground: 210 40% 98%;
-    --primary: 246 80% 59%;
+    --primary: 162 88% 45%; /* #1cbe78 - darker version of #29f19c */
     --primary-foreground: 0 0% 100%;
-    --secondary: 215 25% 27%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 202 98% 40%; /* #0183c7 - darker version of #02a1f9 */
+    --secondary-foreground: 0 0% 100%;
     --muted: 215 25% 27%;
     --muted-foreground: 220 13% 70%;
     --accent: 215 25% 27%;
@@ -55,7 +55,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 215 25% 27%;
     --input: 215 25% 27%;
-    --ring: 246 80% 59%;
+    --ring: 162 88% 45%;
   }
 }
 
@@ -66,5 +66,119 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-figtree), system-ui, sans-serif;
+  }
+}
+
+/* Amperly standard gradients */
+@layer utilities {
+  /* Background gradients */
+  .bg-gradient-amperly {
+    @apply bg-gradient-to-r from-[#1cbe78] to-[#0183c7];
+  }
+  .bg-gradient-amperly-hover {
+    @apply hover:from-[#18a868] hover:to-[#016eaa];
+  }
+  .bg-gradient-amperly-br {
+    @apply bg-gradient-to-br from-[#1cbe78] to-[#0183c7];
+  }
+  .bg-gradient-amperly-light {
+    @apply bg-gradient-to-br from-[#e5f8f3] to-[#e1f0ff];
+  }
+  
+  /* Button gradients */
+  .btn-gradient-amperly {
+    @apply bg-gradient-to-r from-[#1cbe78] to-[#0183c7] hover:from-[#18a868] hover:to-[#016eaa] text-white;
+  }
+  
+  /* Text gradients */
+  .text-gradient-amperly {
+    @apply bg-gradient-to-r from-[#1cbe78] to-[#0183c7] bg-clip-text text-transparent;
+  }
+  
+  /* Border gradients */
+  .border-amperly {
+    @apply border-[#1cbe78];
+  }
+  
+  /* Hover effects */
+  .hover-bg-amperly {
+    @apply hover:bg-[#e5f8f3];
+  }
+  
+  /* Additional background gradient variations for different pages */
+  .bg-gradient-amperly-light-tl {
+    @apply bg-gradient-to-tl from-[#e1f0ff] to-[#e8fcf4];
+  }
+  
+  .bg-gradient-amperly-light-bl {
+    @apply bg-gradient-to-bl from-[#e5f8f3] to-[#ddf2ff];
+  }
+  
+  .bg-gradient-amperly-light-tr {
+    @apply bg-gradient-to-tr from-[#ddf2ff] to-[#e5f8f3];
+  }
+  
+  .bg-gradient-amperly-light-radial {
+    @apply bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#e5f8f3] via-[#e1f0ff] to-[#e8fcf4];
+  }
+  
+  .bg-gradient-amperly-light-conic {
+    @apply bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-[#e5f8f3] via-[#e1f0ff] to-[#e8fcf4];
+  }
+  
+  .bg-gradient-amperly-tri {
+    @apply bg-gradient-to-br from-[#e9f7f3] via-[#e1f0ff] to-[#e8fcf4];
+  }
+  
+  /* Darker tone backgrounds */
+  .bg-gradient-amperly-dark {
+    @apply bg-gradient-to-r from-[#13a065] to-[#0572ac];
+  }
+  
+  .bg-gradient-amperly-subtle {
+    @apply bg-gradient-to-br from-[#f0fbf7] via-[#f1f9ff] to-[#eafcf5];
+  }
+  
+  /* Text color utilities */
+  .text-amperly-primary {
+    @apply text-[#1cbe78];
+  }
+  
+  .text-amperly-secondary {
+    @apply text-[#0183c7];
+  }
+  
+  .text-amperly-primary-hover {
+    @apply hover:text-[#18a868];
+  }
+  
+  .text-amperly-secondary-hover {
+    @apply hover:text-[#016eaa];
+  }
+  
+  /* Background color utilities */
+  .bg-amperly-primary-light {
+    @apply bg-[#e5f8f3];
+  }
+  
+  .bg-amperly-secondary-light {
+    @apply bg-[#ddf2ff];
+  }
+  
+  /* Border color utilities */
+  .border-amperly-primary {
+    @apply border-[#1cbe78];
+  }
+  
+  .border-amperly-primary-light {
+    @apply border-[#1cbe78]/20;
+  }
+  
+  .border-amperly-secondary {
+    @apply border-[#0183c7];
+  }
+  
+  .border-amperly-secondary-light {
+    @apply border-[#0183c7]/20;
   }
 }

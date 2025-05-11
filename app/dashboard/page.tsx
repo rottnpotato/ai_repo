@@ -110,8 +110,8 @@ export default function DashboardPage() {
   // Show loading state while either auth or subscription is loading
   if (isLoading || isLoadingSubscription || isLoadingProfile || !isAuthenticated || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-amperly-tri">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1cbe78]"></div>
       </div>
     )
   }
@@ -121,16 +121,16 @@ export default function DashboardPage() {
       title: "Content Settings",
       description: "Configure content generation parameters and limits",
       icon: FileText,
-      color: "bg-orange-100 text-orange-700",
-      iconColor: "text-orange-500",
+      color: "bg-[#e5f8f3] text-[#1cbe78]",
+      iconColor: "text-[#1cbe78]",
       path: "/dashboard/settings/content",
     },
     {
       title: "Prompt Settings",
       description: "Customize AI prompts for different content types",
       icon: MessageSquare,
-      color: "bg-red-100 text-red-700",
-      iconColor: "text-red-500",
+      color: "bg-[#ddf2ff] text-[#0183c7]",
+      iconColor: "text-[#0183c7]",
       path: "/dashboard/settings/prompts",
     },
   ]
@@ -188,11 +188,11 @@ export default function DashboardPage() {
   
   if (!subscription) {
     subscriptionContent = (
-      <Card className="border-orange-100 shadow-md">
+      <Card className="border-[#1cbe78]/20 shadow-md">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-semibold flex items-center">
-            <div className="mr-2 p-1.5 rounded-full bg-orange-100">
-              <Zap className="h-4 w-4 text-orange-500" />
+            <div className="mr-2 p-1.5 rounded-full bg-[#e5f8f3]">
+              <Zap className="h-4 w-4 text-[#1cbe78]" />
             </div>
             Subscription Status
           </CardTitle>
@@ -203,7 +203,7 @@ export default function DashboardPage() {
             <p className="text-gray-700 mb-4">No active subscription found</p>
             <Button 
               onClick={() => router.push("/subscription")}
-              className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+              className="btn-gradient-amperly"
             >
               Get Subscription
             </Button>
@@ -228,11 +228,11 @@ export default function DashboardPage() {
     }
     
     subscriptionContent = (
-      <Card className="border-orange-100 shadow-md">
+      <Card className="border-[#1cbe78]/20 shadow-md">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-semibold flex items-center">
-            <div className="mr-2 p-1.5 rounded-full bg-orange-100">
-              <Zap className="h-4 w-4 text-orange-500" />
+            <div className="mr-2 p-1.5 rounded-full bg-[#e5f8f3]">
+              <Zap className="h-4 w-4 text-[#1cbe78]" />
             </div>
             Subscription Status
           </CardTitle>
@@ -248,7 +248,7 @@ export default function DashboardPage() {
                   : "Next billing on " + subscriptionDetails.nextBillingDate}
               </p>
             </div>
-            <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#e5f8f3] text-[#1cbe78]">
               {subscriptionDetails.status === "trial" ? "Trial" : "Active"}
             </div>
           </div>
@@ -263,7 +263,7 @@ export default function DashboardPage() {
             <Progress
               value={tokenPercent}
               className="h-2"
-              indicatorClassName={subscriptionDetails.status === "trial" ? "bg-amber-500" : "bg-green-500"}
+              indicatorClassName={subscriptionDetails.status === "trial" ? "bg-[#0183c7]" : "bg-[#1cbe78]"}
             />
             <p className="text-xs text-gray-500 mt-1 text-right">
               {tokensRemaining} tokens remaining
@@ -273,7 +273,7 @@ export default function DashboardPage() {
           <div className="mt-6 flex justify-end">
             <Button 
               onClick={() => router.push("/subscription")}
-              className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+              className="btn-gradient-amperly"
             >
               Manage Subscription
             </Button>
@@ -284,7 +284,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 py-8 px-2">
+    <div className="min-h-screen bg-gradient-amperly-tri py-8 px-2">
       <div className="max-w-6xl mx-auto">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
@@ -295,7 +295,7 @@ export default function DashboardPage() {
           <div className="flex gap-3">
             <Button
               onClick={() => router.push("/subscription")}
-              className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white gap-2"
+              className="btn-gradient-amperly gap-2"
             >
               <Zap className="h-4 w-4" />
               <span>Manage Subscription</span>
@@ -313,11 +313,11 @@ export default function DashboardPage() {
         {subscriptionContent}
 
         {/* Quick Actions */}
-        <Card className="border-orange-100 shadow-md my-8">
+        <Card className="border-[#1cbe78]/20 shadow-md my-8">
           <CardHeader>
             <CardTitle className="text-lg font-semibold flex items-center">
-              <div className="mr-2 p-1.5 rounded-full bg-orange-100">
-                <Settings className="h-4 w-4 text-orange-500" />
+              <div className="mr-2 p-1.5 rounded-full bg-[#e5f8f3]">
+                <Settings className="h-4 w-4 text-[#1cbe78]" />
               </div>
               Settings
             </CardTitle>

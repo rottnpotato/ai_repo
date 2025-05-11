@@ -45,14 +45,14 @@ export default function PromptSettingsPage() {
 
   if (isLoading || !isAuthenticated || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-amperly-light-tr">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1cbe78]"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-amperly-subtle py-8 px-4">
       <div className="max-w-4xl mx-auto">
         <header className="flex items-center justify-between mb-8">
           <div className="flex items-center">
@@ -65,7 +65,7 @@ export default function PromptSettingsPage() {
           <Button
             variant="outline"
             size="sm"
-            className="border-red-200 text-red-600 hover:bg-red-50"
+            className="border-amperly-primary text-amperly-primary hover:bg-amperly-primary-light"
             onClick={() => router.push("/logout")}
           >
             Logout
@@ -81,19 +81,19 @@ export default function PromptSettingsPage() {
           <motion.div className="w-full" initial="hidden" animate="show" variants={staggerContainer(0.1)}>
             <Tabs defaultValue="title" className="w-full">
               <TabsList className="mb-6 grid grid-cols-5 bg-white/60 backdrop-blur-sm">
-                <TabsTrigger value="title" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white">
+                <TabsTrigger value="title" className="data-[state=active]:bg-gradient-amperly data-[state=active]:text-white">
                   Product Title
                 </TabsTrigger>
-                <TabsTrigger value="description" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white">
+                <TabsTrigger value="description" className="data-[state=active]:bg-gradient-amperly data-[state=active]:text-white">
                   Description
                 </TabsTrigger>
-                <TabsTrigger value="features" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white">
+                <TabsTrigger value="features" className="data-[state=active]:bg-gradient-amperly data-[state=active]:text-white">
                   Features
                 </TabsTrigger>
-                <TabsTrigger value="specs" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white">
+                <TabsTrigger value="specs" className="data-[state=active]:bg-gradient-amperly data-[state=active]:text-white">
                   Specifications
                 </TabsTrigger>
-                <TabsTrigger value="seo" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white">
+                <TabsTrigger value="seo" className="data-[state=active]:bg-gradient-amperly data-[state=active]:text-white">
                   SEO
                 </TabsTrigger>
               </TabsList>
@@ -106,7 +106,7 @@ export default function PromptSettingsPage() {
                         <Label htmlFor="title-prompt" className="text-gray-900 font-medium">
                           Product Title Generation
                         </Label>
-                        <Button variant="ghost" size="sm" className="h-8 text-gray-500 hover:text-orange-500 transition-colors">
+                        <Button variant="ghost" size="sm" className="h-8 text-gray-500 hover:text-amperly-primary transition-colors">
                           <RefreshCw className="h-3.5 w-3.5 mr-1" /> Reset to Default
                         </Button>
                       </div>
@@ -114,7 +114,7 @@ export default function PromptSettingsPage() {
                         id="title-prompt"
                         value={shortSystemPrompt}
                         onChange={(e) => setShortSystemPrompt(e.target.value)}
-                        className="min-h-[200px] bg-white border-gray-200 text-gray-900 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                        className="min-h-[200px] bg-white border-gray-200 text-gray-900 focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                         placeholder="Instructions for generating compelling product titles..."
                       />
                       <p className="text-sm text-gray-500 mt-2">
@@ -134,7 +134,7 @@ export default function PromptSettingsPage() {
                       </div>
                       <Textarea
                         id="short-description-prompt"
-                        className="min-h-[150px] bg-white border-gray-200 text-gray-900 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                        className="min-h-[150px] bg-white border-gray-200 text-gray-900 focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                         placeholder="Instructions for generating concise product descriptions..."
                       />
                     </div>
@@ -147,7 +147,7 @@ export default function PromptSettingsPage() {
                       </div>
                       <Textarea
                         id="full-description-prompt"
-                        className="min-h-[150px] bg-white border-gray-200 text-gray-900 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                        className="min-h-[150px] bg-white border-gray-200 text-gray-900 focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                         placeholder="Instructions for generating detailed product descriptions..."
                       />
                     </div>
@@ -164,7 +164,7 @@ export default function PromptSettingsPage() {
                       </div>
                       <Textarea
                         id="features-prompt"
-                        className="min-h-[200px] bg-white border-gray-200 text-gray-900 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                        className="min-h-[200px] bg-white border-gray-200 text-gray-900 focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                         placeholder="Instructions for generating product key features and benefits..."
                       />
                     </div>
@@ -181,7 +181,7 @@ export default function PromptSettingsPage() {
                       </div>
                       <Textarea
                         id="specs-prompt"
-                        className="min-h-[200px] bg-white border-gray-200 text-gray-900 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                        className="min-h-[200px] bg-white border-gray-200 text-gray-900 focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                         placeholder="Instructions for generating technical specifications and product details..."
                       />
                     </div>
@@ -198,7 +198,7 @@ export default function PromptSettingsPage() {
                       </div>
                       <Textarea
                         id="meta-title-prompt"
-                        className="min-h-[100px] bg-white border-gray-200 text-gray-900 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                        className="min-h-[100px] bg-white border-gray-200 text-gray-900 focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                         placeholder="Instructions for generating SEO meta titles..."
                       />
                     </div>
@@ -211,7 +211,7 @@ export default function PromptSettingsPage() {
                       </div>
                       <Textarea
                         id="meta-description-prompt"
-                        className="min-h-[100px] bg-white border-gray-200 text-gray-900 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                        className="min-h-[100px] bg-white border-gray-200 text-gray-900 focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                         placeholder="Instructions for generating SEO meta descriptions..."
                       />
                     </div>
@@ -224,7 +224,7 @@ export default function PromptSettingsPage() {
                       </div>
                       <Textarea
                         id="tags-prompt"
-                        className="min-h-[100px] bg-white border-gray-200 text-gray-900 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                        className="min-h-[100px] bg-white border-gray-200 text-gray-900 focus:border-[#1cbe78] focus:ring focus:ring-[#1cbe78]/20 focus:ring-opacity-50"
                         placeholder="Instructions for generating product tags..."
                       />
                     </div>
@@ -234,7 +234,7 @@ export default function PromptSettingsPage() {
             </Tabs>
 
             <div className="flex justify-end pt-4">
-              <Button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
+              <Button className="btn-gradient-amperly transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
                 <Save className="mr-2 h-4 w-4" />
                 Save Prompt Settings
               </Button>

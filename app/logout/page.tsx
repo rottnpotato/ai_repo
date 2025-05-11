@@ -54,7 +54,7 @@ export default function LogoutPage() {
   }, [logout, router, toast, isAuthenticated, hasLoggedOut])
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-orange-50 to-red-50 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-amperly-light p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -69,7 +69,7 @@ export default function LogoutPage() {
           {isLoggingOut ? (
             <div className="py-6">
               <div className="flex justify-center mb-4">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amperly-primary"></div>
               </div>
               <h2 className="text-xl font-semibold text-gray-900">Logging out...</h2>
               <p className="text-gray-600 mt-2">Please wait while we securely log you out.</p>
@@ -91,7 +91,7 @@ export default function LogoutPage() {
         <div className="mt-6">
           <button
             onClick={() => router.push("/login")}
-            className="text-sm font-medium text-orange-600 hover:text-orange-500"
+            className="text-sm font-medium text-amperly-primary hover:text-amperly-primary-hover"
           >
             Return to Login
           </button>

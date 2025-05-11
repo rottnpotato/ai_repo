@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
 import { Logo } from "@/components/logo"
+import Image from "next/image"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false)
@@ -100,8 +101,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {!collapsed ? (
               <Logo withText size="md" className="text-sidebar-foreground" />
             ) : (
-              <div className="w-8 h-8 rounded-md bg-sidebar-foreground flex items-center justify-center">
-                <span className="text-sidebar font-bold text-lg">A</span>
+              <div className="w-8 h-8 rounded-md overflow-hidden">
+                <Image
+                  src="/amperly-icon-512-2022.png"
+                  alt="Amperly AI Logo"
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-cover"
+                  priority
+                />
               </div>
             )}
           </div>

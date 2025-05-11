@@ -106,7 +106,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-amperly-light-radial p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -156,8 +156,8 @@ export default function ForgotPasswordPage() {
                 </Button>
 
                 <div className="mt-4 text-center">
-                  <Link href="/login" className="text-sm font-medium text-orange-600 hover:text-orange-500">
-                    Back to login
+                  <Link href="/login" className="text-sm font-medium text-amperly-primary hover:text-amperly-primary-hover">
+                    Return to login
                   </Link>
                 </div>
               </form>
@@ -195,7 +195,7 @@ export default function ForgotPasswordPage() {
                   <button
                     type="button"
                     onClick={() => setCurrentStep(1)}
-                    className="text-sm font-medium text-orange-600 hover:text-orange-500"
+                    className="text-sm font-medium text-amperly-primary hover:text-amperly-primary-hover"
                   >
                     Back to previous step
                   </button>
@@ -247,7 +247,7 @@ export default function ForgotPasswordPage() {
                   <button
                     type="button"
                     onClick={() => setCurrentStep(2)}
-                    className="text-sm font-medium text-orange-600 hover:text-orange-500"
+                    className="text-sm font-medium text-amperly-primary hover:text-amperly-primary-hover"
                   >
                     Back to previous step
                   </button>

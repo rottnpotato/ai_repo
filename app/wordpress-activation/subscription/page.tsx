@@ -29,10 +29,10 @@ function SearchParamsProvider({ children }: { children: (searchParams: URLSearch
 // Loading fallback for Suspense
 function LoadingFallback() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-orange-50 to-red-50 p-8">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-amperly-light p-8">
       <Logo className="mb-8" />
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amperly-primary mx-auto mb-4"></div>
         <h3 className="text-xl font-medium text-gray-800">Loading page parameters...</h3>
         <p className="text-gray-600 mt-2">Just a moment while we prepare your data</p>
       </div>
@@ -399,14 +399,14 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
   // Render error state only if there's an error and WordPress parameters were expected
   if (error && (activationToken || redirectBack || accessToken)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-50 p-4">
-        <Card className="w-full max-w-md shadow-xl border-red-200">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-amperly-light p-4">
+        <Card className="w-full max-w-md shadow-xl border-amperly-primary-light">
           <CardHeader className="space-y-1">
             <div className="flex justify-center mb-4">
               <Logo />
             </div>
             <CardTitle className="text-2xl text-center font-bold">WordPress Integration Error</CardTitle>
-            <CardDescription className="text-center text-red-500">
+            <CardDescription className="text-center text-amperly-primary">
               We encountered a problem with your WordPress integration
             </CardDescription>
           </CardHeader>
@@ -430,7 +430,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                 <Button
                   variant="default"
                   onClick={() => redirectBack && (window.location.href = redirectBack)}
-                  className="flex-1 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600"
+                  className="flex-1 btn-gradient-amperly"
                 >
                   Back to WordPress <ExternalLink className="ml-2 h-4 w-4" />
                 </Button>
@@ -453,7 +453,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
     // Case 1: Active subscription in WordPress integration mode - show integration UI
     if (isWordPressIntegration) {
       return (
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 py-12 px-4">
+        <div className="min-h-screen bg-gradient-amperly-light py-12 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -463,12 +463,11 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
             >
               <div className="hidden md:flex flex-col items-center justify-center space-y-6">
                 <div className="relative w-80 h-80">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-64 h-64 bg-gradient-to-br from-red-400 to-orange-300 rounded-full opacity-20"></div>
-                      <div className="absolute w-48 h-48 bg-gradient-to-tr from-orange-400 to-amber-300 rounded-full opacity-30"></div>
-                      <Sparkles className="absolute w-16 h-16 text-amber-500" />
-                    </div>
-               
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-64 h-64 bg-gradient-to-br from-[#1cbe78]/20 to-[#0183c7]/20 rounded-full opacity-20"></div>
+                    <div className="absolute w-48 h-48 bg-gradient-to-tr from-[#1cbe78]/30 to-[#0183c7]/30 rounded-full opacity-30"></div>
+                    <Sparkles className="absolute w-16 h-16 text-[#1cbe78]" />
+                  </div>
                 </div>
                 <div className="text-center space-y-4">
                   <h1 className="text-2xl font-bold text-gray-800">WordPress AI Assistant</h1>
@@ -480,7 +479,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
               
               <div>
                 <header className="flex flex-col items-center justify-center mb-8 text-center md:text-left md:items-start">
-                  <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-800 mb-4">
+                  <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#e5f8f3] text-[#1cbe78] mb-4">
                     <Check className="h-4 w-4 mr-2" />
                     <span>Active Subscription</span>
                   </div>
@@ -497,7 +496,11 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                   <CardHeader>
                     <CardTitle className="flex justify-between items-center">
                       <span className="text-2xl">{subscription.SubscriptionPlan?.Name || "Current Plan"}</span>
-                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                      <Badge variant="outline" className={`${
+                        subscription.Status === "Active" 
+                          ? "bg-green-50 text-green-700 border-green-200" 
+                          : "bg-amber-50 text-amber-700 border-amber-200"
+                      }`}>
                         Active
                       </Badge>
                     </CardTitle>
@@ -513,7 +516,11 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                       <ul className="space-y-3">
                         <li className="flex justify-between">
                           <span className="text-gray-600">Status</span>
-                          <span className="font-medium text-green-600">Active</span>
+                          <span className={`font-medium ${
+                            subscription.Status === "Active" ? "text-green-600" : "text-amber-600"
+                          }`}>
+                            {subscription.Status || "Unknown"}
+                          </span>
                         </li>
                         <li className="flex justify-between">
                           <span className="text-gray-600">Plan</span>
@@ -558,11 +565,11 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                       </Button>
                     ) : integrationComplete ? (
                       <div className="space-y-4 w-full">
-                        <div className="bg-green-50 border border-green-200 rounded-md p-4 flex items-start">
-                          <Check className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                        <div className="bg-[#e5f8f3] border border-[#1cbe78]/20 rounded-md p-4 flex items-start">
+                          <Check className="h-5 w-5 text-[#1cbe78] mr-3 mt-0.5 flex-shrink-0" />
                           <div>
-                            <h4 className="font-medium text-green-800">Integration Complete</h4>
-                            <p className="text-green-700 text-sm mt-1">
+                            <h4 className="font-medium text-gray-800">Integration Complete</h4>
+                            <p className="text-gray-700 text-sm mt-1">
                               Your WordPress site has been successfully connected. You can now close this page and return to WordPress.
                             </p>
                           </div>
@@ -571,7 +578,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                     ) : (
                       <div className="space-y-4 w-full">
                         <Button
-                          className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600"
+                          className="w-full btn-gradient-amperly"
                           onClick={handleOptOut}
                         >
                           Connect to WordPress
@@ -597,7 +604,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
     // Case 2: For normal login with active subscription, show subscription management UI
     else {
       return (
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 py-12 px-4">
+        <div className="min-h-screen bg-gradient-amperly-light py-12 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div 
               initial={{ opacity: 0, y: 20 }} 
@@ -626,15 +633,15 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
               )}
               
               {subscription && (
-                <Card className="w-full max-w-2xl mx-auto mb-8 shadow-xl border-orange-200 overflow-hidden">
-                  <div className="bg-gradient-to-r from-orange-500 to-red-500 h-2" />
+                <Card className="w-full max-w-2xl mx-auto mb-8 shadow-xl border-amperly-primary-light overflow-hidden">
+                  <div className="bg-gradient-amperly h-2" />
                   <CardHeader>
                     <CardTitle className="flex justify-between items-center">
                       <span className="text-2xl">{subscription.SubscriptionPlan?.Name || "Current Plan"}</span>
                       <Badge variant="outline" className={`${
                         subscription.Status === "Active" 
-                          ? "bg-green-50 text-green-700 border-green-200" 
-                          : "bg-amber-50 text-amber-700 border-amber-200"
+                          ? "bg-[#e5f8f3] text-[#1cbe78] border-[#1cbe78]/20" 
+                          : "bg-[#e1f0ff] text-[#0183c7] border-[#0183c7]/20"
                       }`}>
                         {subscription.Status || "Unknown"}
                       </Badge>
@@ -652,7 +659,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                         <li className="flex justify-between">
                           <span className="text-gray-600">Status</span>
                           <span className={`font-medium ${
-                            subscription.Status === "Active" ? "text-green-600" : "text-amber-600"
+                            subscription.Status === "Active" ? "text-[#1cbe78]" : "text-[#0183c7]"
                           }`}>
                             {subscription.Status || "Unknown"}
                           </span>
@@ -684,7 +691,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
   // If not in WordPress integration mode, show different subscription management UI
   if (isNormalLogin || !isWordPressIntegration) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 py-12 px-4">
+      <div className="min-h-screen bg-gradient-amperly-light py-12 px-4">
         <div className="max-w-6xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
@@ -713,15 +720,15 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
             )}
             
             {subscription && (
-              <Card className="w-full max-w-2xl mx-auto mb-8 shadow-xl border-orange-200 overflow-hidden">
-                <div className="bg-gradient-to-r from-orange-500 to-red-500 h-2" />
+              <Card className="w-full max-w-2xl mx-auto mb-8 shadow-xl border-amperly-primary-light overflow-hidden">
+                <div className="bg-gradient-amperly h-2" />
                 <CardHeader>
                   <CardTitle className="flex justify-between items-center">
                     <span className="text-2xl">{subscription.SubscriptionPlan?.Name || "Current Plan"}</span>
                     <Badge variant="outline" className={`${
                       subscription.Status === "Active" 
-                        ? "bg-green-50 text-green-700 border-green-200" 
-                        : "bg-amber-50 text-amber-700 border-amber-200"
+                        ? "bg-[#e5f8f3] text-[#1cbe78] border-[#1cbe78]/20" 
+                        : "bg-[#e1f0ff] text-[#0183c7] border-[#0183c7]/20"
                     }`}>
                       {subscription.Status || "Unknown"}
                     </Badge>
@@ -739,7 +746,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                       <li className="flex justify-between">
                         <span className="text-gray-600">Status</span>
                         <span className={`font-medium ${
-                          subscription.Status === "Active" ? "text-green-600" : "text-amber-600"
+                          subscription.Status === "Active" ? "text-[#1cbe78]" : "text-[#0183c7]"
                         }`}>
                           {subscription.Status || "Unknown"}
                         </span>
@@ -792,7 +799,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                     } relative overflow-hidden`}>
                       {isTrialPlan && (
                         <div className="absolute top-0 right-0">
-                          <div className="bg-amber-500 text-white text-xs font-bold px-3 py-1 transform rotate-45 translate-x-4 translate-y-2 shadow-sm">
+                          <div className="bg-[#1cbe78] text-white text-xs font-bold px-3 py-1 transform rotate-45 translate-x-4 translate-y-2 shadow-sm">
                             TRIAL
                           </div>
                         </div>
@@ -863,7 +870,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
   // (This means the user has an active subscription but we're showing the WordPress integration UI)
   if (subscription && subscription.Status === "Active") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 py-12 px-4">
+      <div className="min-h-screen bg-gradient-amperly-light py-12 px-4">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -877,7 +884,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                 <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
                   Connect Your WordPress Site
                 </h1>
-                <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-800 mb-4 mx-auto">
+                <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#e5f8f3] text-[#1cbe78] mb-4">
                   <Check className="h-4 w-4 mr-2" />
                   <span>Active Subscription: {subscription.SubscriptionPlan?.Name}</span>
                 </div>
@@ -896,8 +903,8 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
               </Alert>
             )}
             
-            <Card className="shadow-xl border-orange-200 overflow-hidden mb-8">
-              <div className="bg-gradient-to-r from-orange-500 to-red-500 h-2" />
+            <Card className="shadow-xl border-[#1cbe78]/20 overflow-hidden mb-8">
+              <div className="bg-gradient-amperly h-2" />
               <CardHeader>
                 <CardTitle className="text-2xl text-center">Complete WordPress Integration</CardTitle>
                 <CardDescription className="text-center">
@@ -934,11 +941,11 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                   </Button>
                 ) : integrationComplete ? (
                   <div className="space-y-4 w-full">
-                    <div className="bg-green-50 border border-green-200 rounded-md p-4 flex items-start">
-                      <Check className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <div className="bg-[#e5f8f3] border border-[#1cbe78]/20 rounded-md p-4 flex items-start">
+                      <Check className="h-5 w-5 text-[#1cbe78] mr-3 mt-0.5 flex-shrink-0" />
                       <div>
-                        <h4 className="font-medium text-green-800">Integration Complete</h4>
-                        <p className="text-green-700 text-sm mt-1">
+                        <h4 className="font-medium text-gray-800">Integration Complete</h4>
+                        <p className="text-gray-700 text-sm mt-1">
                           Your WordPress site has been successfully connected. You can now close this page and return to WordPress.
                         </p>
                       </div>
@@ -947,7 +954,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                 ) : (
                   <Button
                     size="lg"
-                    className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600"
+                    className="w-full btn-gradient-amperly"
                     onClick={handleWordPressIntegration}
                   >
                     Complete WordPress Integration
@@ -969,11 +976,11 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
   // Function to get a plan-specific icon
   const getPlanIcon = (plan: any, index: number) => {
     const icons = [
-      <Sparkles key={0} className="h-6 w-6 text-amber-500" />,
+      <Sparkles key={0} className="h-6 w-6 text-[#1cbe78]" />,
       <Rocket key={1} className="h-6 w-6 text-violet-500" />,
       <Zap key={2} className="h-6 w-6 text-blue-500" />,
       <ShieldCheck key={3} className="h-6 w-6 text-emerald-500" />,
-      <BarChart key={4} className="h-6 w-6 text-red-500" />
+      <BarChart key={4} className="h-6 w-6 text-[#0183c7]" />
     ];
     
     return icons[index % icons.length];
@@ -981,7 +988,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
 
   // Return WordPress integration UI for subscription selection
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 py-12 px-4">
+    <div className="min-h-screen bg-gradient-amperly-light py-12 px-4">
       <div className="max-w-6xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
@@ -991,7 +998,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
           <header className="flex flex-col items-center text-center mb-14">
             <Logo size="lg" className="mb-8" />
             <div className="space-y-4 max-w-3xl">
-              <h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl md:text-5xl font-bold text-gradient-amperly mb-2">
                 Supercharge Your WordPress Site
               </h1>
               
@@ -1002,13 +1009,13 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                 Select Your AI Content Plan
               </h2>
               <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
-                <Badge variant="outline" className="bg-amber-50 border-amber-200 text-amber-700">
+                <Badge variant="outline" className="bg-[#e5f8f3] border-[#1cbe78]/20 text-[#1cbe78]">
                   <Sparkles className="h-3.5 w-3.5 mr-1" /> Try For Free
                 </Badge>
-                <Badge variant="outline" className="bg-blue-50 border-blue-200 text-blue-700">
+                <Badge variant="outline" className="bg-[#e1f0ff] border-[#0183c7]/20 text-[#0183c7]">
                   <Laptop className="h-3.5 w-3.5 mr-1" /> WordPress Plugin
                 </Badge>
-                <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700">
+                <Badge variant="outline" className="bg-[#e5f8f3] border-[#1cbe78]/20 text-[#1cbe78]">
                   <Zap className="h-3.5 w-3.5 mr-1" /> AI Powered
                 </Badge>
               </div>
@@ -1085,16 +1092,16 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
             >
               <div className="bg-green-50 border border-green-300 rounded-lg p-6 max-w-2xl mx-auto">
                 <div className="flex items-center justify-center mb-4">
-                  <div className="bg-green-100 p-2 rounded-full">
-                    <Check className="h-6 w-6 text-green-600" />
+                  <div className="bg-[#e5f8f3] p-2 rounded-full">
+                    <Check className="h-6 w-6 text-[#1cbe78]" />
                   </div>
-                  <h3 className="text-xl font-bold text-green-800 ml-3">Plan Selected!</h3>
+                  <h3 className="text-xl font-bold text-gray-800 ml-3">Plan Selected!</h3>
                 </div>
-                <p className="text-green-700 mb-6">
+                <p className="text-gray-700 mb-6">
                   You've selected a subscription plan. Click the button below to complete your WordPress integration.
                 </p>
                 <Button 
-                  className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                  className="btn-gradient-amperly"
                   size="lg"
                   onClick={handleWordPressIntegration}
                   disabled={isRedirecting}
@@ -1122,12 +1129,12 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                 animate={{ opacity: 1, scale: 1 }}
                 className="col-span-full"
               >
-                <Card className="shadow-xl border-green-200 overflow-hidden">
-                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 h-2" />
+                <Card className="shadow-xl border-[#1cbe78]/20 overflow-hidden">
+                  <div className="bg-gradient-amperly h-2" />
                   <CardHeader>
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-green-100 rounded-full">
-                        <Check className="h-6 w-6 text-green-600" />
+                      <div className="p-2 bg-[#e5f8f3] rounded-full">
+                        <Check className="h-6 w-6 text-[#1cbe78]" />
                       </div>
                       <CardTitle className="text-2xl font-bold">Integration Complete!</CardTitle>
                     </div>
@@ -1136,27 +1143,27 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    <div className="bg-green-50 border border-green-200 rounded-md p-4">
-                      <p className="text-green-800">
+                    <div className="bg-[#e5f8f3] border border-[#1cbe78]/20 rounded-md p-4">
+                      <p className="text-gray-800">
                         You have successfully integrated your WordPress site with our AI assistant. You can now return to WordPress and start using the plugin.
                       </p>
                     </div>
                     
-                    <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-                      <h4 className="font-medium text-blue-800 mb-2 flex items-center">
+                    <div className="bg-[#e1f0ff] border border-[#0183c7]/20 rounded-md p-4">
+                      <h4 className="font-medium text-gray-800 mb-2 flex items-center">
                         <Laptop className="h-4 w-4 mr-2" /> Next Steps
                       </h4>
-                      <ul className="space-y-2 text-blue-700 text-sm">
+                      <ul className="space-y-2 text-gray-700 text-sm">
                         <li className="flex items-start">
-                          <Check className="h-4 w-4 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
+                          <Check className="h-4 w-4 text-[#1cbe78] mr-2 flex-shrink-0 mt-0.5" />
                           <span>Go back to your WordPress admin dashboard</span>
                         </li>
                         <li className="flex items-start">
-                          <Check className="h-4 w-4 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
+                          <Check className="h-4 w-4 text-[#1cbe78] mr-2 flex-shrink-0 mt-0.5" />
                           <span>Open the AI Assistant plugin settings</span>
                         </li>
                         <li className="flex items-start">
-                          <Check className="h-4 w-4 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
+                          <Check className="h-4 w-4 text-[#1cbe78] mr-2 flex-shrink-0 mt-0.5" />
                           <span>Start creating AI-powered content for your website</span>
                         </li>
                       </ul>
@@ -1187,14 +1194,14 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                   >
                     <Card className={`h-full shadow-lg hover:shadow-xl transition-all duration-300 border-2 ${
                       isSelected 
-                        ? 'border-green-500 ring-2 ring-green-300 transform scale-[1.02]' 
+                        ? 'border-[#1cbe78] ring-2 ring-[#1cbe78]/30 transform scale-[1.02]' 
                         : isTrialPlan 
-                          ? 'border-amber-400' 
+                          ? 'border-[#1cbe78]' 
                           : 'border-gray-200'
                     } relative overflow-hidden`}>
                       {isTrialPlan && (
                         <div className="absolute top-0 right-0">
-                          <div className="bg-amber-500 text-white text-xs font-bold px-3 py-1 transform rotate-45 translate-x-4 translate-y-2 shadow-sm">
+                          <div className="bg-[#1cbe78] text-white text-xs font-bold px-3 py-1 transform rotate-45 translate-x-4 translate-y-2 shadow-sm">
                             TRIAL
                           </div>
                         </div>
@@ -1202,7 +1209,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                       
                       {isSelected && (
                         <div className="absolute top-3 left-3">
-                          <div className="bg-green-500 text-white rounded-full p-1">
+                          <div className="bg-[#1cbe78] text-white rounded-full p-1">
                             <Check className="h-4 w-4" />
                           </div>
                         </div>
@@ -1210,9 +1217,9 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                       
                       <CardHeader className={`${
                         isSelected 
-                          ? 'bg-gradient-to-r from-green-50 to-emerald-50'
+                          ? 'bg-gradient-to-r from-[#e5f8f3] to-[#e1f0ff]'
                           : isTrialPlan 
-                            ? 'bg-gradient-to-r from-amber-50 to-amber-100' 
+                            ? 'bg-gradient-to-r from-[#e5f8f3] to-[#e1f0ff]' 
                             : 'bg-white'
                       }`}>
                         <div className="flex items-center gap-3 mb-2">
@@ -1248,10 +1255,10 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                         <Button
                           className={`w-full ${
                             isSelected 
-                              ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600'
+                              ? 'btn-gradient-amperly'
                               : isTrialPlan 
-                                ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600' 
-                                : 'bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600'
+                                ? 'btn-gradient-amperly' 
+                                : 'btn-gradient-amperly'
                           } text-white`}
                           onClick={() => handlePurchaseSubscription(plan.Id)}
                           disabled={isPurchasing || isRedirecting || (isSelected && !integrationComplete)}
@@ -1283,7 +1290,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
               </p>
               <Button
                 variant="outline"
-                className="border-red-200 hover:bg-red-50 hover:text-red-700 transition-all duration-300"
+                className="border-amperly-primary text-amperly-primary hover:bg-amperly-primary-light"
                 onClick={handleOptOut}
                 disabled={isRedirecting}
               >
@@ -1294,7 +1301,7 @@ function WordPressSubscriptionContent({ searchParams }: { searchParams: URLSearc
                   </>
                 ) : (
                   <>
-                    Complete Integration Without a Plan
+                    Continue Without Subscribing
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </>
                 )}

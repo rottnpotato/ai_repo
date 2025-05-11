@@ -365,9 +365,9 @@ export default function SignupPage() {
     if (googleButtonError) {
       return (
         <div className="mb-6">
-          <Alert className="mb-4 bg-amber-50">
-            <AlertCircle className="h-4 w-4 text-amber-600" />
-            <AlertDescription className="text-amber-800">
+          <Alert className="mb-4 bg-[#ddf2ff]">
+            <AlertCircle className="h-4 w-4 text-[#0183c7]" />
+            <AlertDescription className="text-[#014e77]">
               Google Sign-Up button couldn't be loaded. You can try the manual option below or use email/password.
             </AlertDescription>
           </Alert>
@@ -433,7 +433,7 @@ export default function SignupPage() {
         strategy="afterInteractive"
       />
     
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-50 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-amperly-light-bl p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -564,23 +564,22 @@ export default function SignupPage() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+                  className="w-full btn-gradient-amperly"
                   disabled={isLoading}
                 >
                   {isLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating Account...
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Signing up...
                     </>
-                  ) : (
-                    "Create Account"
-                  )}
+                  ) : "Sign up"}
                 </Button>
               </form>
 
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-600">
                   Already have an account?{" "}
-                  <Link href="/login" className="font-medium text-orange-600 hover:text-orange-500">
+                  <Link href="/login" className="font-medium text-[#1cbe78] hover:text-[#18a868]">
                     Sign in
                   </Link>
                 </p>

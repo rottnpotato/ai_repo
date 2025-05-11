@@ -438,7 +438,7 @@ export default function LoginPage() {
         strategy="afterInteractive"
       />
     
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-50 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-amperly-light-tl p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -481,7 +481,7 @@ export default function LoginPage() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="password">Password</Label>
-                    <Link href="/forgot-password" className="text-sm font-medium text-orange-600 hover:text-orange-500">
+                    <Link href="/forgot-password" className="text-sm font-medium text-[#1cbe78] hover:text-[#18a868]">
                       Forgot password?
                     </Link>
                   </div>
@@ -514,23 +514,22 @@ export default function LoginPage() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+                  className="w-full btn-gradient-amperly"
                   disabled={isLoading}
                 >
                   {isLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Signing in...
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Logging in...
                     </>
-                  ) : (
-                    "Sign in"
-                  )}
+                  ) : "Login"}
                 </Button>
               </form>
 
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-600">
                   Don&apos;t have an account?{" "}
-                  <Link href="/signup" className="font-medium text-orange-600 hover:text-orange-500">
+                  <Link href="/signup" className="font-medium text-[#1cbe78] hover:text-[#18a868]">
                     Sign up
                   </Link>
                 </p>

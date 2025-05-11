@@ -604,7 +604,7 @@ export function SignupForm({ activationToken, redirectBack }: SignupFormProps) {
         
         <Button
           type="submit"
-          className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white"
+          className="w-full btn-gradient-amperly text-white"
           disabled={isLoading}
         >
           {isLoading ? (
